@@ -11,11 +11,12 @@ This document serves as a foundational guide for setting up a webserver using Ap
     - [Step 1: Update system](#step-1-update-system)
     - [Step 2: User management](#step-2-user-management)
     - [Step 3: Switch to new user](#step-3-switch-to-new-user)
-    - [Step 4: Add SSH banner](#step-4-add-ssh-banner)
+    - [Step 4: Install SSH](#step-4-install-ssh)
+    - [Step 5: Add SSH banner](#step-5-add-ssh-banner)
         - [Banner text example](#banner-text-example)
-    - [Step 5: Install Apache and PHP](#step-5-install-apache-and-php)
-    - [Step 6: Restart Apache](#step-6-restart-apache)
-    - [Step 7: Clear history](#step-7-clear-history) 
+    - [Step 6: Install Apache and PHP](#step-6-install-apache-and-php)
+    - [Step 7: Restart Apache](#step-7-restart-apache)
+    - [Step 8: Clear history](#step-8-clear-history) 
 3. [Links](#links)
 
 ---
@@ -44,7 +45,12 @@ sudo do-release-upgrade -d # Optional - upgrade to latest Ubuntu LTS
 su - <username>
 ```
 
-### 👉 Step 4: Add SSH banner
+### 👉 Step 4: Install SSH
+```bash
+sudo apt install openssh-server
+```
+
+### 👉 Step 5: Add SSH banner
 ```bash
 sudo nano /etc/motd # nano | vim | emacs
 ```
@@ -95,18 +101,18 @@ Welcome to server [webserver]
 ------------------------------
 ```
 
-### 👉 Step 5: Install Apache and PHP
+### 👉 Step 6: Install Apache and PHP
 ```bash
 sudo apt install apache2
 sudo apt install php libapache2-mod-php php-mysql
 ```
 
-### 👉 Step 6: Restart Apache
+### 👉 Step 7: Restart Apache
 ```bash
 sudo systemctl restart apache2
 ```
 
-### 👉 Step 7: Clear history
+### 👉 Step 8: Clear history
 ```bash
 history -c
 ```
