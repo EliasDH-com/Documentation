@@ -1,3 +1,4 @@
+![logo](/Images/logo.png)
 # 💙🤍Base Webserver Template CT🤍💙
 
 This document serves as a foundational guide for setting up a webserver using Apache and PHP on a Linux system. It includes essential steps and configurations to establish a functional webserver.
