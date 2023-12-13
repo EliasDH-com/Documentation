@@ -29,7 +29,7 @@ This is a list of commands that I use for Cisco devices. I use this list to quic
 
 ## 🖖Introduction
 
-Below you will find a list of commands that I use for Cisco devices. End I also added de 'Type' dis is the mode you need to be in to use the command. The 'Commando' is the command you need to use. The 'Explanation' is the explanation of the command.
+Below you will find a list of commands that I use for Cisco devices. End I also added de **Type** dis is the mode you need to be in to use the command. The **Commando** is the command you need to use. The **Explanation** is the explanation of the command.
 
 ## ✨Commands
 
