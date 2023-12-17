@@ -1,4 +1,4 @@
 ![logo](/Images/logo.png)
 # 💙🤍README🤍💙
 
-This is a collection of guides and snippets that I have created and collected over time. I hope you find them useful. 
+This repository holds documentation and other pertinent files for the documentation and operation of our company.
