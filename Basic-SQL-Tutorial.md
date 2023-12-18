@@ -61,6 +61,8 @@ This tutorial is a basic introduction to SQL. It covers most of the topics requi
         - [DROP VIEW](#drop-view)
         - [CREATE PROCEDURE](#create-procedure)
         - [DROP PROCEDURE](#drop-procedure)
+        - [CREATE FUNCTION](#create-function)
+        - [DROP FUNCTION](#drop-function)
     - [TRUNCATE TABLE](#truncate-table)
 3. [Links](#links)
 
@@ -352,6 +354,12 @@ DROP TABLE Customers;
     ```
     - `CREATE FUNCTION` - statement is used to create a user-defined function.
     ```SQL
+    CREATE FUNCTION [dbo].[udfGetStockStatus] (@OrderQty int, @StockQty int) RETURNS varchar(50) AS BEGIN DECLARE @StockStatus varchar(50) IF (@OrderQty > @StockQty) SET @StockStatus = 'The product is out of stock' ELSE SET @StockStatus = 'The product is in stock' RETURN @StockStatus END;
+    ```
+    - `DROP FUNCTION` - statement is used to delete a user-defined function.
+    ```SQL
+    DROP FUNCTION udfGetStockStatus;
+    ```
 
 - `TRUNCATE TABLE` - statement is used to delete the data inside a table, but not the table itself.
 ```SQL
