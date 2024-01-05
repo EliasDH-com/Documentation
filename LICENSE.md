@@ -1,4 +1,3 @@
-![logo](/Images/logo.png)
 # 💙🤍LICENSE🤍💙
 
 Copyright © EliasDH. All rights Reserved.
