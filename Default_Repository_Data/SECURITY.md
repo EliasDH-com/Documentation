@@ -1,5 +1,5 @@
 ![logo](/Images/logo.png)
-# 💙🤍Security Policy🤍💙
+# 💙🤍SECURITY🤍💙
 
 ## Reporting a Vulnerability
 

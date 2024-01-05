@@ -1,5 +1,5 @@
 ![logo](/Images/logo.png)
-# 💙🤍No Duplication License🤍💙
+# 💙🤍LICENSE🤍💙
 
 Copyright © EliasDH. All rights Reserved.
 
