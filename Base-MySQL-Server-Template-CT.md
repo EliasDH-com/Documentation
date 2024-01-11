@@ -50,7 +50,7 @@ sudo systemctl restart apache2
 
 ### 👉 Step 3: Login to MySQL
 ```bash
-sudo MySQL -u root -p # Enter password
+sudo mysql -u root -p # Enter password
 # If you get an error, try this: sudo MySQL -u root
 ```
 
