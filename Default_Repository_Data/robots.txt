@@ -1,3 +1,9 @@
 User-agent: *
-Disallow: /assets/
-Disallow: /lib/
+Disallow: /assets
+Disallow: /lib
+Allow: index.html
+Allow: index.php
+
+Sitemap: https://eliasdh.com/sitemap.xml
+
+Crawl-delay: 5
