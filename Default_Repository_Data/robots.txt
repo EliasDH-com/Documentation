@@ -1,6 +1,8 @@
 User-agent: *
 Disallow: /assets
 Disallow: /lib
+Disallow: /data
+Disallow: /sendemail
 Allow: index.html
 Allow: index.php
 
