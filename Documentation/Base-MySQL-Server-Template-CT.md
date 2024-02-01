@@ -97,7 +97,7 @@ sudo mysql -u root -p # Enter password
 
 ### 👉 Step 5: Copy database
 ```bash
-MySQLdump -u root -p <database_name> > <database_name>.sql # Enter password
+mysqldump -u root -p <database_name> > <database_name>.sql # Enter password
 ```
 
 ### 👉 Step 6: Reboot database
