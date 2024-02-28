@@ -9,7 +9,8 @@ This is a collection of random nodes for Windows automations that I have found u
 
 1. [Introduction](#introduction)
 2. [Posts](#posts)
-
+    1. [Post 1: Startup full screen web page](#post-1-startup-full-screen-web-page)
+    2. [Post 2: Disable Windows Defender](#post-2-disable-windows-defender)
 3. [Links](#links)
 
 ---
