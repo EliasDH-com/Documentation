@@ -1,4 +1,4 @@
-![logo](/Images/logo.png)
+![logo](https://eliasdh.com/assets/media/images/logo-github.png)
 # 💙🤍Base MySQL Server Template CT🤍💙
 
 The following document serves as a foundational guide for setting up a MySQL server on a Linux system. It includes essential steps and configurations to establish a functional MySQL server.

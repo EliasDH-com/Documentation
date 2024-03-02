@@ -1,4 +1,4 @@
-![logo](/Images/logo.png)
+![logo](https://eliasdh.com/assets/media/images/logo-github.png)
 # 💙🤍Random Windows automations.🤍💙
 
 This is a collection of random nodes for Windows automations that I have found useful.

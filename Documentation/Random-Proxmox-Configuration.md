@@ -1,4 +1,4 @@
-![logo](/Images/logo.png)
+![logo](https://eliasdh.com/assets/media/images/logo-github.png)
 # 💙🤍Random Proxmox Configuration🤍💙
 
 This is a collection of random nodes for Proxmox configuration that I have found useful.

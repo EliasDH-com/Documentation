@@ -1,4 +1,4 @@
-![logo](/Images/logo.png)
+![logo](https://eliasdh.com/assets/media/images/logo-github.png)
 # 💙🤍Base Mailcow Config🤍💙
 
 This wil help you to configure a Mailcow on Ubuntu 20.04 LTS.

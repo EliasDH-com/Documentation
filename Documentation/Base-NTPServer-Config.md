@@ -1,4 +1,4 @@
-![logo](/Images/logo.png)
+![logo](https://eliasdh.com/assets/media/images/logo-github.png)
 # 💙🤍Base NTPServer Config🤍💙
 
 This guide is for installing and configuring a base NTP server on Ubuntu 20.04 LTS.

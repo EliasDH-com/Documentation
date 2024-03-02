@@ -1,4 +1,4 @@
-![logo](/Images/logo.png)
+![logo](https://eliasdh.com/assets/media/images/logo-github.png)
 # 💙🤍Basic Answer File Tutorial🤍💙
 
 This is a tutorial on how to create a basic answer file for Windows 10.

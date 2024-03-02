@@ -1,4 +1,4 @@
-![logo](/Images/logo.png)
+![logo](https://eliasdh.com/assets/media/images/logo-github.png)
 # 💙🤍TCP And UDP Ports🤍💙
 
 This is some information about networking and ports. And some other stuff that I find interesting.

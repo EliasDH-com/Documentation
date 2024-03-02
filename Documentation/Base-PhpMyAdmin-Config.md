@@ -1,4 +1,4 @@
-![logo](/Images/logo.png)
+![logo](https://eliasdh.com/assets/media/images/logo-github.png)
 # 💙🤍Base PhpMyAdmin Config🤍💙
 
 This guide is for installing and configuring a base PhpMyAdmin on Ubuntu 20.04 LTS.

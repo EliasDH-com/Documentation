@@ -1,4 +1,4 @@
-![logo](/Images/logo.png)
+![logo](https://eliasdh.com/assets/media/images/logo-github.png)
 # 💙🤍Basic SQL Tutorial🤍💙
 
 This tutorial is a basic introduction to SQL. It covers most of the topics required for a basic understanding of SQL and to get a feel of how it works.

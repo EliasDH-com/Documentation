@@ -1,4 +1,4 @@
-![logo](/Images/logo.png)
+![logo](https://eliasdh.com/assets/media/images/logo-github.png)
 # 💙🤍Cisco Terminal Commands🤍💙
 
 This is a list of commands that I use for Cisco devices. I use this list to quickly find the commands I need. I hope this list can help you too. If you have any questions or suggestions, please let me know.

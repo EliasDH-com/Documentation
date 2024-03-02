@@ -1,4 +1,4 @@
-![logo](/Images/logo.png)
+![logo](https://eliasdh.com/assets/media/images/logo-github.png)
 # 💙🤍Base FTPServer Config🤍💙
 
 This wil help you to configure a FTP server on Ubuntu 20.04 LTS.

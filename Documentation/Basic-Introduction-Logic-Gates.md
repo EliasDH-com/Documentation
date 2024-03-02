@@ -1,4 +1,4 @@
-![logo](/Images/logo.png)
+![logo](https://eliasdh.com/assets/media/images/logo-github.png)
 # 💙🤍Basic Introduction Logic Gates🤍💙
 
 Disc Guide to give you the basic information about logic Gates.

@@ -1,3 +1,4 @@
+![logo](https://eliasdh.com/assets/media/images/logo-github.png)
 # 💙🤍README🤍💙
 
 This repository holds documentation and other pertinent files for the documentation and operation of our company.
