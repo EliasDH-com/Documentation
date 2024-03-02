@@ -1,24 +1,21 @@
 ![logo](https://eliasdh.com/assets/media/images/logo-github.png)
 # 💙🤍Base Webserver Template CT🤍💙
 
-This document serves as a foundational guide for setting up a webserver using Apache and PHP on a Linux system. It includes essential steps and configurations to establish a functional webserver.
-
----
-
 ## 📘Table of Contents
 
-1. [Introduction](#introduction)
-2. [Steps](#steps)
-    - [Step 1: Update system](#step-1-update-system)
-    - [Step 2: User management](#step-2-user-management)
-    - [Step 3: Switch to new user](#step-3-switch-to-new-user)
-    - [Step 4: Install SSH](#step-4-install-ssh)
-    - [Step 5: Add SSH banner](#step-5-add-ssh-banner)
-        - [Banner text example](#banner-text-example)
-    - [Step 6: Install Apache and PHP](#step-6-install-apache-and-php)
-    - [Step 7: Restart Apache](#step-7-restart-apache)
-    - [Step 8: Clear history](#step-8-clear-history) 
-3. [Links](#links)
+1. [📘Table of Contents](#📘table-of-contents)
+2. [🖖Introduction](#🖖introduction)
+3. [✨Steps](#✨steps)
+    1. [👉Step 1: Update system](#👉step-1-update-system)
+    2. [👉Step 2: User management](#👉step-2-user-management)
+    3. [👉Step 3: Switch to new user](#👉step-3-switch-to-new-user)
+    4. [👉Step 4: Install SSH](#👉step-4-install-ssh)
+    5. [👉Step 5: Add SSH banner](#👉step-5-add-ssh-banner)
+        1. [🍳Banner text example](#🍳banner-text-example)
+    6. [👉Step 6: Install Apache and PHP](#👉step-6-install-apache-and-php)
+    7. [👉Step 7: Restart Apache](#👉step-7-restart-apache)
+    8. [👉Step 8: Clear history](#👉step-8-clear-history)
+4. [🔗Links](#🔗links)
 
 ---
 
@@ -28,12 +25,12 @@ This template provides a structured approach to setting up a basic webserver on 
 
 ## ✨Steps
 
-### 👉 Step 1: Update system
+### 👉Step 1: Update system
 ```bash
 sudo apt update && sudo apt upgrade -y
 ```
 
-### 👉 Step 2: User management
+### 👉Step 2: User management
 ```bash
 sudo adduser <username>
 sudo usermod -aG sudo <username>
@@ -41,21 +38,21 @@ sudo usermod -aG sudo <username>
 sudo do-release-upgrade -d # Optional - upgrade to latest Ubuntu LTS
 ```
 
-### 👉 Step 3: Switch to new user
+### 👉Step 3: Switch to new user
 ```bash
 su - <username>
 ```
 
-### 👉 Step 4: Install SSH
+### 👉Step 4: Install SSH
 ```bash
 sudo apt install openssh-server
 ```
 
-### 👉 Step 5: Add SSH banner
+### 👉Step 5: Add SSH banner
 ```bash
 sudo nano /etc/motd # nano | vim | emacs
 ```
-#### 🍳 Banner text example
+#### 🍳Banner text example
 ```text
 ??????????????????????????????????????????JJJJJJJJJJJJJJJJ??????????????????????????????????????????
 ??????????????????????????????????JJJJJ???77!!!~~~~~~!!77???JJJJ????????????????????????????????????
@@ -102,18 +99,18 @@ Welcome to server [webserver]
 ------------------------------
 ```
 
-### 👉 Step 6: Install Apache and PHP
+### 👉Step 6: Install Apache and PHP
 ```bash
 sudo apt install apache2
 sudo apt install php libapache2-mod-php php-mysql
 ```
 
-### 👉 Step 7: Restart Apache
+### 👉Step 7: Restart Apache
 ```bash
 sudo systemctl restart apache2
 ```
 
-### 👉 Step 8: Clear history
+### 👉Step 8: Clear history
 ```bash
 history -c
 ```

@@ -1,29 +1,26 @@
 ![logo](https://eliasdh.com/assets/media/images/logo-github.png)
 # 💙🤍Cisco Terminal Commands🤍💙
 
-This is a list of commands that I use for Cisco devices. I use this list to quickly find the commands I need. I hope this list can help you too. If you have any questions or suggestions, please let me know.
-
----
-
 ## 📘Table of Contents
 
-1. [Introduction](#introduction)
-2. [Commands](#commands)
-    - [Switch>](#switch)
-    - [Switch#](#switch-1)
-    - [Switch(config)#](#switchconfig)
-    - [Router(config-dn)#](#routerconfig-dn)
-    - [Router(config-ephone)#](#routerconfig-ephone)
-    - [Router(config-telephony)#](#routerconfig-telephony)
-    - [Switch/Router(config-if-range)#](#switchrouterconfig-if-range)
-    - [Switch(config-dhcp-class)#](#switchconfig-dhcp-class)
-    - [Switch(dhcp-config)#](#switchdhcp-config)
-    - [Switch(config-subif)#](#switchconfig-subif)
-    - [Switch(config-vlan)#](#switchconfig-vlan)
-    - [Switch(config-router)#](#switchconfig-router)
-    - [Switch(config-line)#](#switchconfig-line)
-    - [Switch(config-if)#](#switchconfig-if)
-3. [Links](#links)
+1. [📘Table of Contents](#📘table-of-contents)
+2. [🖖Introduction](#🖖introduction)
+3. [✨Commands](#✨commands)
+    1. [👉Switch>](#👉switch)
+    2. [👉Switch#](#👉switch)
+    3. [👉Switch(config)#](#👉switchconfig)
+    4. [👉Router(config-dn)#](#👉routerconfig-dn)
+    5. [👉Router(config-ephone)#](#👉routerconfig-ephone)
+    6. [👉Router(config-telephony)#](#👉routerconfig-telephony)
+    7. [👉Switch/Router(config-if-range)#](#👉switchrouterconfig-if-range)
+    8. [👉Switch(config-dhcp-class)#](#👉switchconfig-dhcp-class)
+    9. [👉Switch(dhcp-config)#](#👉switchdhcp-config)
+    10. [👉Switch(config-subif)#](#👉switchconfig-subif)
+    11. [👉Switch(config-vlan)#](#👉switchconfig-vlan)
+    12. [👉Switch(config-router)#](#👉switchconfig-router)
+    13. [👉Switch(config-line)#](#👉switchconfig-line)
+    14. [👉Switch(config-if)#](#👉switchconfig-if)
+4. [🔗Links](#🔗links)
 
 ---
 
@@ -33,13 +30,13 @@ Below you will find a list of commands that I use for Cisco devices. End I also 
 
 ## ✨Commands
 
-### 👉 Switch>
+### 👉Switch>
 
 | Type    | Commando | Explanation                       |
 | ------- | -------- | --------------------------------- |
 | Switch> |  enable  | Switches to enable mode (switch#) |
 
-### 👉 Switch#
+### 👉Switch#
 
 | Type    | Commando                    | Explanation                                    |
 | ------- | --------------------------- | ---------------------------------------------- |
@@ -63,7 +60,7 @@ Below you will find a list of commands that I use for Cisco devices. End I also 
 | Switch# | show access-lists <i>       | Displays specific access lists                 |
 | Switch# | clear ip dhcp binding *     | Clears all DHCP bindings                       |
 
-### 👉 Switch(config)#
+### 👉Switch(config)#
 
 | Type            | Commando                                                                       | Explanation                                         |
 | --------------- | ------------------------------------------------------------------------------ | --------------------------------------------------- |
@@ -98,7 +95,7 @@ Below you will find a list of commands that I use for Cisco devices. End I also 
 | Switch(config)# | ephone-dn 1                                                                    | Enters ephone-dn configuration mode                 |
 | Switch(config)# | access-list <i>                                                                | Enters access-list configuration mode               |
 
-### 👉 Router(config-dn)#
+### 👉Router(config-dn)#
 
 | Type               | Commando   | Explanation                     |
 | ------------------ | ---------- | ------------------------------- |
@@ -111,7 +108,7 @@ Below you will find a list of commands that I use for Cisco devices. End I also 
 | Router(config-ephone)# | type 7960               | You set the type of phone                                   |
 | Router(config-ephone)# | mac-address <MAC Phone> | You link the mac address of the phone to the digital label  |
 
-### 👉 Router(config-telephony)#
+### 👉Router(config-telephony)#
 
 | Type                      | Commando                                        | Explanation                                                                             |
 | ------------------------- | ----------------------------------------------- | --------------------------------------------------------------------------------------- |
@@ -120,7 +117,7 @@ Below you will find a list of commands that I use for Cisco devices. End I also 
 | Router(config-telephony)# | ip source-address <IP fo TFTP server> port 2000 | Sets the IP&Port of the TFTP server to be used (telephony services configuration files) |
 | Router(config-telephony)# | create cnf-files                                | Initiates the creation of the configuration files for Cisco IP Phones                   |
 
-### 👉 Switch/Router(config-if-range)#
+### 👉Switch/Router(config-if-range)#
 
 | Type                    | Commando                          | Explanation                                 |
 | ----------------------- | --------------------------------- | ------------------------------------------- |
@@ -128,14 +125,14 @@ Below you will find a list of commands that I use for Cisco devices. End I also 
 | Switch(config-if-range) | switchport access vlan <1-4094>   | Sets the VLAN for the interface             |
 | Router(config-if-range) | switchport voice vlan <1 to 4094> | Sets the VLAN for the interface (for voice) |
 
-### 👉 Switch(config-dhcp-class)#
+### 👉Switch(config-dhcp-class)#
 
 | Type                       | Commando                | Explanation                          |
 | -------------------------- | ----------------------- | ------------------------------------ |
 | Switch(config-dhcp-class)# | address range <IPx-IPy> | Sets the address range for the class |
 
 
-### 👉 Switch(dhcp-config)#
+### 👉Switch(dhcp-config)#
 
 | Type                 | Commando                       | Explanation                           |
 | -------------------- | ------------------------------ | ------------------------------------- |
@@ -145,26 +142,26 @@ Below you will find a list of commands that I use for Cisco devices. End I also 
 | Switch(dhcp-config)# | option 150 ip <IP>             | Sets the TFTP server for the class    |
 | Switch(dhcp-config)# | lease <days> <hours> <minutes> | Sets the lease time for the class     |
 
-### 👉 Switch(config-subif)#
+### 👉Switch(config-subif)#
 
 | Type                 | Commando                       | Explanation                              |
 | -------------------- | ------------------------------ | ---------------------------------------- |
 | Switch(config-subif) | encapsulation dot1q <VLAN ID>  | Sets the VLAN ID for the subinterface    |
 | Switch(config-subif) | ip address <IP> <Mask>         | Sets the IP address for the subinterface |
 
-### 👉 Switch(config-vlan)#
+### 👉Switch(config-vlan)#
 
 | Type               | Commando    | Explanation                |
 | ------------------ | ----------- | -------------------------- |
 | Switch(config-vlan)| name <Name> | Sets the name for the VLAN |
 
-### 👉 Switch(config-router)#
+### 👉Switch(config-router)#
 
 | Type                  | Commando                           | Explanation                        |
 | --------------------- | ---------------------------------- | ---------------------------------- |
 | Switch(config-router) | passive-interface fastethernet 9/0 | Sets the interface to passive mode |
 
-### 👉 Switch(config-line)#
+### 👉Switch(config-line)#
 
 | Type                | Commando            | Explanation                           |
 | ------------------- | ------------------- | ------------------------------------- |
@@ -174,7 +171,7 @@ Below you will find a list of commands that I use for Cisco devices. End I also 
 | Switch(config-line) | history size 0      | Sets the history size for the line    |
 | Switch(config-line) | transport input ssh | Sets the transport input for the line |
 
-### 👉 Switch(config-if)#
+### 👉Switch(config-if)#
 
 | Type              | Commando                                                                       | Explanation                               |
 | ----------------- | ------------------------------------------------------------------------------ | ----------------------------------------- |

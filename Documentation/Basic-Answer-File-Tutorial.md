@@ -1,28 +1,30 @@
 ![logo](https://eliasdh.com/assets/media/images/logo-github.png)
 # 💙🤍Basic Answer File Tutorial🤍💙
 
-This is a tutorial on how to create a basic answer file for Windows 10.
-
----
-
 ## 📘Table of Contents
 
-1. [Introduction](#introduction)
-2. [Requirements](#requirements)
-3. [Important: How to create unattended Windows 10 installation media](#important-how-to-create-unattended-windows-10-installation-media)
-4. [Steps](#steps)
-    1. [Step 1: How to install Windows System Image Manager](#step-1-how-to-install-windows-system-image-manager)
-    2. [Step 2: How to create Windows 10 answer file project](#step-2-how-to-create-windows-10-answer-file-project)
-    3. [Step 3: Import Windows 10 image files](#step-3-import-windows-10-image-files)
-    4. [Step 4: Convert install.esd to install.wim](#step-4-convert-installesd-to-installwim)
-    5. [Step 5: Setting up an answer file environment](#step-5-setting-up-an-answer-file-environment)
-    6. [Step 6: How to create Windows 10 answer file](#step-6-how-to-create-windows-10-answer-file)
-        1. [Step 6.1: Configure language and region settings](#step-61-configure-language-and-region-settings)
-        2. [Step 6.2: Configure installation settings](#step-62-configure-installation-settings)
-        3. [Step 6.3: BIOS only: Creating and modifying partitions](#step-63-bios-only-creating-and-modifying-partitions)
-        4. [Step 6.4: How to join a domain](#step-64-how-to-join-a-domain)
-        5. [Step 6.5: Pass 7 oobeSystem](#step-65-pass-7-oobesystem)
-5. [Links](#links)
+1. [📘Table of Contents](#📘table-of-contents)
+2. [🖖Introduction](#🖖introduction)
+3. [🧰Requirements](#🧰requirements)
+4. [📝Important: How to create unattended Windows 10 installation media](#📝important-how-to-create-unattended-windows-10-installation-media)
+5. [✨Steps](#✨steps)
+    1. [👉Step 1: How to install Windows System Image Manager](#👉step-1-how-to-install-windows-system-image-manager)
+    2. [👉Step 2: How to create Windows 10 answer file project](#👉step-2-how-to-create-windows-10-answer-file-project)
+    3. [👉Step 3: Import Windows 10 image files](#👉step-3-import-windows-10-image-files)
+    4. [👉Step 4: Convert install.esd to install.wim](#👉step-4-convert-installesd-to-installwim)
+    5. [👉Step 5: Setting up an answer file environment](#👉step-5-setting-up-an-answer-file-environment)
+    6. [👉Step 6: How to create Windows 10 answer file](#👉step-6-how-to-create-windows-10-answer-file)
+        1. [👉Step 6.1: Configure language and region settings](#👉step-6.1-configure-language-and-region-settings)
+        2. [👉Step 6.2: Configure installation settings](#👉step-6.2-configure-installation-settings)
+        3. [👉Step 6.3: BIOS only: Creating and modifying partitions](#👉step-6.3-bios-only-creating-and-modifying-partitions)
+        4. [👉Step 6.4: UEFI only: Creating and modifying partitions](#👉step-6.4-uefi-only-creating-and-modifying-partitions)
+        5. [👉Step 6.5: Configure Windows settings](#👉step-6.5-configure-windows-settings)
+        6. [👉Step 6.6: Configure user account settings](#👉step-6.6-configure-user-account-settings)
+        7. [👉Step 6.7: Configure OOBE settings](#👉step-6.7-configure-oobe-settings)
+        8. [👉Step 6.8: Save the answer file](#👉step-6.8-save-the-answer-file)
+    7. [👉Step 7: Create Windows 10 installation media](#👉step-7-create-windows-10-installation-media)
+    8. [👉Step 8: Test the unattended installation](#👉step-8-test-the-unattended-installation)
+6. [🔗Links](#🔗links)
 
 ---
 
@@ -65,7 +67,7 @@ After setting up the answer file, the process will erase everything on the drive
 
 ## ✨Steps
 
-### 👉 Step 1: How to install Windows System Image Manager
+### 👉Step 1: How to install Windows System Image Manager
 
 Anyone can write an answer file manually. Microsoft offers the Windows System Image Manager `(SIM)` console available through the Windows Assessment and Deployment Kit `(ADK)` to make it easier to create the file to install Windows 10 unattended. 
 
@@ -91,10 +93,10 @@ Once you complete the steps, you can use the console to create a `.xml` file wit
 
 After the file is created, you can adjust the settings and reuse it for other installations, instead of having to use the Windows System Image Manager tool.
 
-### 👉 Step 2: How to create Windows 10 answer file project
+### 👉Step 2: How to create Windows 10 answer file project
 After installing the Windows System Image Manager console, you need to import the OS installation files onto your device, and set up the environment to create an answer file.
 
-### 👉 Step 3: Import Windows 10 image files
+### 👉Step 3: Import Windows 10 image files
 
 - Open File Explorer.
 - Navigate to the Windows 10 ISO file location.
@@ -124,7 +126,7 @@ likely to have an `install.esd`, which you won't be able to open because it's en
 
 If you don't have an `.wim` image file, you can get the uncrypted image by downloading the latest Windows 10 ISO file from the Microsoft website, or you can use the `Dism` command-line tool to convert the encrypted file to an unencrypted image. -> [Download](https://www.microsoft.com/en-us/download/details.aspx?id=5753).
 
-### 👉 Step 4: Convert install.esd to install.wim
+### 👉Step 4: Convert install.esd to install.wim
 
 In the case that you're stuck with an `install.esd` image, you can use the DISM command tool to export the image files and create a `.wim` image from a `.esd` file.
 
@@ -146,7 +148,7 @@ In the case that you're stuck with an `install.esd` image, you can use the DISM 
 
     ![Basic-Answer-File-Tutorial-6](/Images/Basic-Answer-File-Tutorial-6.png)
 
-### 👉 Step 5: Setting up an answer file environment 
+### 👉Step 5: Setting up an answer file environment 
 
 - Open Start. 
 - Search for Windows System Image Manager and click the top result to open the console. 
@@ -194,7 +196,7 @@ In the case that you're stuck with an `install.esd` image, you can use the DISM 
 
 After you complete the steps, the environment will be created to configure an answer file.
 
-### 👉 Step 6: How to create Windows 10 answer file 
+### 👉Step 6: How to create Windows 10 answer file 
 
 An answer file contains seven different stages (passes), and the stages you need to configure will depend upon the type of automation you want to create.
 
@@ -202,7 +204,7 @@ This guide will help you to get started configuring an autounattend.xml answer f
 
 > Quick note: Depending on the image, you may see the components name starting with amd64_Microsoft-Windows for the 64-bit version or x86_Microsoft-Windows for the 32-bit version of Windows 10. For this guide, we'll be using the `amd64_Microsoft-Windows` name format.
 
-#### 👉 Step 6.1: Configure language and region settings
+#### 👉Step 6.1: Configure language and region settings
 
 Under the `Windows Image` section, expand the Components folder. 
 - Expand the `amd64_Microsoft-Windows-International-Core-WinPE` component. 
@@ -226,7 +228,7 @@ Under the `Windows Image` section, expand the Components folder.
 
     ![Basic-Answer-File-Tutorial-16](/Images/Basic-Answer-File-Tutorial-16.png)
 
-#### 👉 Step 6.2: Configure installation settings
+#### 👉Step 6.2: Configure installation settings
 
 Inside the answer file, you also have to specify the settings to properly configure the drive.
 
@@ -258,7 +260,7 @@ The reason is that BIOS-based computers only require two partitions (System Rese
 
 You can check if you're using BIOS or UEFI by opening System Information from the Start menu, and checking the `System Summary.` If `BIOS Mode` reads Legacy, then you're using BIOS; if it reads UEFI, you're using UEFI.
 
-#### 👉 Step 6.3: BIOS only: Creating and modifying partitions
+#### 👉Step 6.3: BIOS only: Creating and modifying partitions
 
 - Under the `Answer File` section, expand the `amd64_Microsoft-Windows-Setup` component. 
 - Expand the `DiskConfiguration` component. 
@@ -319,7 +321,7 @@ As part of this setup, the last task is to indicate the setup where to install W
 The above settings tell the setup to install Windows 10 automatically on the first drive inside the first partition. 
 Once you complete the steps, continue with the Defining the product key instructions. 
 
-#### 👉 Step 6.4: How to join a domain
+#### 👉Step 6.4: How to join a domain
 
 This is quite easy simply. Copy my work from down below. This will be my example domain name (test.local).
 
@@ -334,7 +336,7 @@ This is quite easy simply. Copy my work from down below. This will be my example
     ![Basic-Answer-File-Tutorial-28](/Images/Basic-Answer-File-Tutorial-28.png)
 
 
-#### 👉 Step 6.5: Pass 7 oobeSystem
+#### 👉Step 6.5: Pass 7 oobeSystem
 
 Using an answer file, you can also automate the configuration of the out-of-box experience (OOBE), including additional language settings, accept the licensing agreement, create a user account, and more
 

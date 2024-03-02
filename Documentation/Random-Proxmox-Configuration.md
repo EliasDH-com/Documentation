@@ -1,17 +1,16 @@
 ![logo](https://eliasdh.com/assets/media/images/logo-github.png)
 # 💙🤍Random Proxmox Configuration🤍💙
 
-This is a collection of random nodes for Proxmox configuration that I have found useful.
-
----
-
 ## 📘Table of Contents
 
-1. [Introduction](#introduction)
-2. [Posts](#posts)
-    - [Post 1: Template Proxmox "notes"](#post-1-template-proxmox-notes)
-    - [Post 2: Proxmox node web GUI theme modificaties](#post-2-proxmox-node-web-gui-theme-modificaties)
-3. [Links](#links)
+1. [📘Table of Contents](#📘table-of-contents)
+2. [🖖Introduction](#🖖introduction)
+3. [✨Posts](#✨posts)
+    1. [👉Post 1: Template Proxmox "notes"](#👉post-1-template-proxmox-notes)
+    2. [👉Post 2: Proxmox node web GUI theme modificaties](#👉post-2-proxmox-node-web-gui-theme-modificaties)
+    3. [👉Post 3: Remove node and cluster Proxmox](#👉post-3-remove-node-and-cluster-proxmox)
+    4. [👉Post 4: Remove (local-lvm) Proxmox](#👉post-4-remove-local-lvm-proxmox)
+4. [🔗Links](#🔗links)
 
 ---
 
@@ -21,7 +20,7 @@ This is a collection of random nodes for Proxmox configuration that I have found
 
 ## ✨Posts
 
-### 👉 Post 1: Template Proxmox "notes"
+### 👉Post 1: Template Proxmox "notes"
 > The idea is to have a template for each VM that you create. This template will contain all the information about the VM. This way you can easily find the information you need about the VM. This is especially useful when you have a lot of VMs.
 ```text
 Property of EliasDH
@@ -40,7 +39,7 @@ Port = E-/ I-/
 -
 ```
 
-### 👉 Post 2: Proxmox node web GUI theme modificaties
+### 👉Post 2: Proxmox node web GUI theme modificaties
 > This is a collection of modifications that I have made to the Proxmox web GUI theme. I have made these modifications to make the web GUI more to my liking.
 ```bash
 sudo apt update && sudo apt install wget curl -y
@@ -50,7 +49,7 @@ sudo ./PVEDiscordDark.sh
 ```
 Credit: [GitHub Weilbyte](https://github.com/Weilbyte)
 
-### 👉 Post 3: Remove node and cluster Proxmox
+### 👉Post 3: Remove node and cluster Proxmox
 - Remove node
     ```bash
     sudo pvecm nodes
@@ -81,7 +80,7 @@ Credit: [GitHub Weilbyte](https://github.com/Weilbyte)
     sudo reboot
     ```
 
-### 👉 Post 4: Remove (local-lvm) Proxmox
+### 👉Post 4: Remove (local-lvm) Proxmox
 
 ```bash
 sudo lvremve /dev/pve/data

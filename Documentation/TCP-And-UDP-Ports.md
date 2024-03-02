@@ -1,17 +1,14 @@
 ![logo](https://eliasdh.com/assets/media/images/logo-github.png)
 # 💙🤍TCP And UDP Ports🤍💙
 
-This is some information about networking and ports. And some other stuff that I find interesting.
-
----
-
 ## 📘Table of Contents
 
-1. [Introduction](#introduction)
-2. [Ports](#ports)
-    1. [Well-known Ports](#well-known-ports)
-    2. [Registered Ports](#registered-ports)
-3. [Links](#links)
+1. [📘Table of Contents](#📘table-of-contents)
+2. [🖖Introduction](#🖖introduction)
+3. [✨Ports](#✨ports)
+    1. [👉Well-known Ports](#👉well-known-ports)
+    2. [👉Registered Ports](#👉registered-ports)
+4. [🔗Links](#🔗links)
 
 ---
 
@@ -25,7 +22,7 @@ Port numbers can run from **0** to **65353**.
 
 ## ✨Ports
 
-### 👉 Well-known Ports
+### 👉Well-known Ports
 
 | Port | Protocol  | TCP | UDP | Description                                                   |
 | ---- | --------- | --- | --- | ------------------------------------------------------------- |
@@ -60,7 +57,7 @@ Port numbers can run from **0** to **65353**.
 | 993  | IMAPs     | Yes | No  | Internet Message Access Protocol over TLS/SSL (IMAPS)         |
 | 995  | POP3s     | Yes | No  | Post Office Protocol version 3 over TLS/SSL (POP3S)           |
 
-### 👉 Registered Ports
+### 👉Registered Ports
 | Port | Protocol  | TCP | UDP | Description                                                   |
 | ---- | --------- | --- | --- | ------------------------------------------------------------- |
 | 3306 | MySQL     | Yes | No  | MySQL                                                         |

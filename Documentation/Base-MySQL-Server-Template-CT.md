@@ -1,24 +1,21 @@
 ![logo](https://eliasdh.com/assets/media/images/logo-github.png)
 # 💙🤍Base MySQL Server Template CT🤍💙
 
-The following document serves as a foundational guide for setting up a MySQL server on a Linux system. It includes essential steps and configurations to establish a functional MySQL server.
-
----
-
 ## 📘Table of Contents
 
-1. [Introduction](#introduction)
-2. [Steps](#steps)
-    - [Step 1: Update system](#step-1-update-system)
-    - [Step 2: Install MySQL](#step-2-install-MySQL)
-        - [Step 2.1: Apache extensions](#step-21-apache-extensions)
-        - [Step 2.1: Apache restart](#step-21-apache-restart)
-    - [Step 3: Login to MySQL](#step-3-login-to-MySQL)
-    - [Step 4: Database configuration](#step-4-database-configuration)
-    - [Step 5: Copy database](#step-5-copy-database)
-    - [Step 6: Reboot database](#step-6-reboot-database)
-    - [Step 7: Clear history](#step-7-clear-history)
-3. [Links](#links)
+1. [📘Table of Contents](#📘table-of-contents)
+2. [🖖Introduction](#🖖introduction)
+3. [✨Steps](#✨steps)
+    1. [👉Step 1: Update system](#👉step-1-update-system)
+    2. [👉Step 2: Install MySQL](#👉step-2-install-mysql)
+        1. [👉Step 2.1: Apache extensions](#👉step-2.1-apache-extensions)
+        2. [👉Step 2.1: Apache restart](#👉step-2.1-apache-restart)
+    3. [👉Step 3: Login to MySQL](#👉step-3-login-to-mysql)
+    4. [👉Step 4: Database configuration](#👉step-4-database-configuration)
+    5. [👉Step 5: Copy database](#👉step-5-copy-database)
+    6. [👉Step 6: Reboot database](#👉step-6-reboot-database)
+    7. [👉Step 7: Clear history](#👉step-7-clear-history)
+4. [🔗Links](#🔗links)
 
 ---
 
@@ -28,33 +25,33 @@ This template provides a structured approach to setting up a basic MySQL server 
 
 ## ✨Steps
 
-### 👉 Step 1: Update system
+### 👉Step 1: Update system
 ```bash
 sudo apt update && sudo apt upgrade -y
 ```
 
-### 👉 Step 2: Install MySQL
+### 👉Step 2: Install MySQL
 ```bash
 sudo apt install MySQL-server
 ```
 
-#### 👉 Step 2.1: Apache extensions
+#### 👉Step 2.1: Apache extensions
 ```bash
 sudo apt install php libapache2-mod-php php-MySQL
 ```
 
-#### 👉 Step 2.1: Apache restart
+#### 👉Step 2.1: Apache restart
 ```bash
 sudo systemctl restart apache2
 ```
 
-### 👉 Step 3: Login to MySQL
+### 👉Step 3: Login to MySQL
 ```bash
 sudo mysql -u root -p # Enter password
 # If you get an error, try this: sudo MySQL -u root
 ```
 
-### 👉 Step 4: Database configuration
+### 👉Step 4: Database configuration
 - Create database
     ```sql
     CREATE DATABASE <database_name>;
@@ -95,19 +92,19 @@ sudo mysql -u root -p # Enter password
     EXIT;
     ```
 
-### 👉 Step 5: Copy database
+### 👉Step 5: Copy database
 ```bash
 mysqldump -u root -p <database_name> > <database_name>.sql # Enter password
 ```
 
-### 👉 Step 6: Reboot database
+### 👉Step 6: Reboot database
 ```bash
 sudo systemctl restart MySQL
 # sudo service MySQL start
 # sudo service MySQL status
 ```
 
-### 👉 Step 7: Clear history
+### 👉Step 7: Clear history
 ```bash
 history -c
 ```

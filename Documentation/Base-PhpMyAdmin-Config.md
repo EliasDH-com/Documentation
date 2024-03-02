@@ -1,21 +1,18 @@
 ![logo](https://eliasdh.com/assets/media/images/logo-github.png)
 # 💙🤍Base PhpMyAdmin Config🤍💙
 
-This guide is for installing and configuring a base PhpMyAdmin on Ubuntu 20.04 LTS.
-
----
-
 ## 📘Table of Contents
 
-1. [Introduction](#introduction)
-2. [Steps](#steps)
-    1. [Step 1: Update and upgrade the system](#step-1-update-and-upgrade-the-system)
-    2. [Step 2: Install mysql-server](#step-2-install-mysql-server)
-    3. [Step 3: Install phpmyadmin](#step-3-install-phpmyadmin)
-    4. [Step 4: Configure phpmyadmin](#step-4-configure-phpmyadmin)
-    5. [Step 5: Configure MySQL](#step-5-configure-mysql)
-    6. [Step 6: Login into the web interface](#step-6-login-into-the-web-interface)
-3. [Links](#links)
+1. [📘Table of Contents](#📘table-of-contents)
+2. [🖖Introduction](#🖖introduction)
+3. [✨Steps](#✨steps)
+    1. [👉Step 1: Update and upgrade the system](#👉step-1-update-and-upgrade-the-system)
+    2. [👉Step 2: Install mysql-server](#👉step-2-install-mysql-server)
+    3. [👉Step 3: Install phpmyadmin](#👉step-3-install-phpmyadmin)
+    4. [👉Step 4: Configure phpmyadmin](#👉step-4-configure-phpmyadmin)
+    5. [👉Step 5: Configure MySQL](#👉step-5-configure-mysql)
+    6. [👉Step 6: Login into the web interface](#👉step-6-login-into-the-web-interface)
+4. [🔗Links](#🔗links)
 
 ---
 
@@ -25,23 +22,23 @@ This is a base PhpMyAdmin configuration for Ubuntu 20.04 LTS. This configuration
 
 ## ✨Steps
 
-### 👉 Step 1: Update and upgrade the system
+### 👉Step 1: Update and upgrade the system
 ```bash
 sudo apt update && sudo apt upgrade -y
 ```
 
-### 👉 Step 2: Install mysql-server
+### 👉Step 2: Install mysql-server
 ```bash
 sudo apt install mysql-server -y
 ```
 
-### 👉 Step 3: Install phpmyadmin
+### 👉Step 3: Install phpmyadmin
 ```bash
 sudo apt-get install phpmyadmin apache2-utils -y
 # sudo apt install phpmyadmin -y
 ```
 
-### 👉 Step 4: Configure phpmyadmin
+### 👉Step 4: Configure phpmyadmin
 The images I show here are automatically displayed when you run the installation 
 process in the terminal.
 
@@ -64,7 +61,7 @@ set it up manually.
 
     ![Base-PhpMyAdmin-Config-4](/Images/Base-PhpMyAdmin-Config-4.png)
 
-### 👉 Step 5: Configure MySQL
+### 👉Step 5: Configure MySQL
 We need to connect to the SQL server. We do that with the following command. The default user is root without a password. 
 ```bash
 sudo mysql -u root
@@ -77,7 +74,7 @@ GRANT ALL PRIVILEGES ON * . * TO 'user'@'localhost';
 EXIT;
 ```
 
-### 👉 Step 6: Login into the web interface
+### 👉Step 6: Login into the web interface
 Type in your IP address and then the following path. 
 ```text
 /phpmyadmin/index.php 

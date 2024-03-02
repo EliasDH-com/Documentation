@@ -1,23 +1,20 @@
 ![logo](https://eliasdh.com/assets/media/images/logo-github.png)
 # 💙🤍Base Mailcow Config🤍💙
 
-This wil help you to configure a Mailcow on Ubuntu 20.04 LTS.
-
----
-
 ## 📘Table of Contents
 
-1. [Introduction](#introduction)
-2. [Steps](#steps)
-    1. [Step 1: Update and upgrade the system](#step-1-update-and-upgrade-the-system)
-    2. [Step 2: Preparations](#step-2-preparations)
-    3. [Step 3: Install the packages needed for future installations](#step-3-install-the-packages-needed-for-future-installations)
-    4. [Step 4: Install Docker and Docker Compose](#step-4-install-docker-and-docker-compose)
-    5. [Step 5: Install Mailcow](#step-5-install-mailcow)
-    6. [Step 6: Configure Mailcow](#step-6-configure-mailcow)
-    7. [Step 7: Configure DKIM](#step-7-configure-dkim)
-    8. [Step 8: Using the Webmail Client "SOGo"](#step-8-using-the-webmail-client-sogo)
-3. [Links](#links)
+1. [📘Table of Contents](#📘table-of-contents)
+2. [🖖Introduction](#🖖introduction)
+3. [✨Steps](#✨steps)
+    1. [👉Step 1: Update and upgrade the system](#👉step-1-update-and-upgrade-the-system)
+    2. [👉Step 2: Preparations](#👉step-2-preparations)
+    3. [👉Step 3: Install the packages needed for future installations](#👉step-3-install-the-packages-needed-for-future-installations)
+    4. [👉Step 4: Install Docker and Docker Compose](#👉step-4-install-docker-and-docker-compose)
+    5. [👉Step 5: Install Mailcow](#👉step-5-install-mailcow)
+    6. [👉Step 6: Configure Mailcow](#👉step-6-configure-mailcow)
+    7. [👉Step 7: Configure DKIM](#👉step-7-configure-dkim)
+    8. [👉Step 8: Using the Webmail Client "SOGo"](#👉step-8-using-the-webmail-client-sogo)
+4. [🔗Links](#🔗links)
 
 ---
 
@@ -27,12 +24,12 @@ This tutorial explains how to install Mailcow on Ubuntu 20.04 LTS. Mailcow is a 
 
 ## ✨Steps
 
-### 👉 Step 1: Update and upgrade the system
+### 👉Step 1: Update and upgrade the system
 ```bash
 sudo apt update && sudo apt upgrade -y
 ```
 
-### 👉 Step 2: Preparations
+### 👉Step 2: Preparations
 Before you can start installing Mailcow, you need to do some preparations, which mainly affect the DNS settings of the domain that you want to use to receive and send e-mails. To do this, follow the steps below:
 
 - The hostname of your server should be "mail", so the FQDN should be "mail.eliasdh.com" (replace "eliasdh.com" with your own domain name).
@@ -47,12 +44,12 @@ Before you can start installing Mailcow, you need to do some preparations, which
 
 - Define a PTR record (Reverse DNS) for the IP address of your server and set the value to the FQDN of your server ("mail.eliasdh.com"). You can set this PTR record directly in the web interface of any good hoster like Contabo. For some providers, you have to write an e-mail or open a support ticket.
 
-### 👉 Step 3: Install the packages needed for future installations
+### 👉Step 3: Install the packages needed for future installations
 ```bash
 sudo apt install curl nano git apt-transport-https ca-certificates gnupg2 software-properties-common -y
 ```
 
-### 👉 Step 4: Install Docker and Docker Compose
+### 👉Step 4: Install Docker and Docker Compose
 ```bash
 # Use the following command to add the key needed for the Docker repository: 
 sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
@@ -73,7 +70,7 @@ sudo curl -L https://github.com/docker/compose/releases/download/$(curl -Ls http
 sudo chmod +x /usr/local/bin/docker-compose 
 ```
 
-### 👉 Step 5: Install Mailcow
+### 👉Step 5: Install Mailcow
 ```bash
 cd /opt
 sudo git clone https://github.com/mailcow/mailcow-dockerized
@@ -111,7 +108,7 @@ Now restart Nginx. To do this, use the command:
 sudo docker-compose restart nginx-mailcow
 ```
 
-### 👉 Step 6: Configure Mailcow
+### 👉Step 6: Configure Mailcow
 - Open the Mailcow web interface under the domain of your server in your web browser via HTTPS. (e.g. "https://mail.eliasdh.com").
 
 - Log in with the username "admin" and the default password "moohoo". 
@@ -135,7 +132,7 @@ sudo docker-compose restart nginx-mailcow
 
 - Mailcow is now basically set up. However, it's recommended to perform further configurations such as the DKIM configuration. The DKIM configuration is explained in the next step of this tutorial. For further information, the Mailcow documentation is very helpful.
 
-### 👉 Step 7: Configure DKIM
+### 👉Step 7: Configure DKIM
 - Log in to the Mailcow web interface and click on "Configuration" at the top menu. Then click on "Configuration & Details". 
 
 - Click on the "Configuration" tab and then on "ARC/DKIM keys" 
@@ -144,7 +141,7 @@ sudo docker-compose restart nginx-mailcow
 
 - Finally, add a TXT record for "dkim._domainkey.eliasdh.com" (matching the DKIM selector) in your domain's DNS settings and set the previously copied content from the text box as the value of this TXT record.
 
-### 👉 Step 8: Using the Webmail Client "SOGo"
+### 👉Step 8: Using the Webmail Client "SOGo"
 Of course, you can use mail clients like Thunderbird or Outlook, but Mailcow also offers it's own webmail client. Using this webmail client, you can also read your e-mails directly in the browse:
 
 - In the top menu of the Mailcow web interface, click on "Apps" and then click on "Webmail" or open the webmail client directly by appending "/SOGo" to the domain of your server.
