@@ -1,20 +1,21 @@
 ![logo](https://eliasdh.com/assets/media/images/logo-github.png)
 # 💙🤍README🤍💙
 
-This repository holds documentation and other pertinent files for the documentation and operation of our company.
-
----
-
 ## 📘Table of Contents
 
-1. [Introduction](#introduction)
-2. [Links](#links)
+1. [📘Table of Contents](#📘table-of-contents)
+2. [🖖Introduction](#🖖introduction)
+3. [🔗Links](#🔗links)
 
 ---
 
 ## 🖖Introduction
 
-This repository holds documentation and other pertinent files for the documentation and operation of our company. This repository is public and can be viewed by anyone. This repository is not for code, but for documentation and other files that are not code.
+I kindly request your thorough examination and absorption of the comprehensive documentation incorporated within the confines of this repository. Your diligent review of the diverse materials provided herein will undoubtedly enhance your understanding of the intricacies and nuances associated with the contents therein.
+
+Please also see following documents:
+- [LICENSE](LICENSE.md)
+- [SECURITY](SECURITY.md)
 
 ## 🔗Links
 - 👯 Web hosting company [EliasDH.com](https://eliasdh.com).
