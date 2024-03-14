@@ -15,7 +15,8 @@
     6. [👉Step 6: Install Apache and PHP](#👉step-6-install-apache-and-php)
     7. [👉Step 7: Restart Apache](#👉step-7-restart-apache)
     8. [👉Step 8: Clear history](#👉step-8-clear-history)
-4. [🔗Links](#🔗links)
+4. [📦Extra](#📦extra)
+5. [🔗Links](#🔗links)
 
 ---
 
