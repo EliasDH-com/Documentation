@@ -115,6 +115,29 @@ sudo systemctl restart apache2
 history -c
 ```
 
+## 📦Extra
+
+- Enable .conf files Apache2
+```bash
+cd /etc/apache2/sites-available
+sudo a2ensite <filename>.conf
+sudo systemctl reload apache2
+```
+
+- Disable .conf files Apache2
+```bash
+cd /etc/apache2/sites-available
+sudo a2dissite <filename>.conf
+sudo systemctl reload apache2
+```
+
+- SSL Certbot Apache2
+```bash
+sudo apt install certbot python3-certbot-apache
+sudo certbot --apache
+```
+
+
 ## 🔗Links
 - 👯 Web hosting company [EliasDH.com](https://eliasdh.com).
 - 📫 How to reach us eliasdehondt@outlook.com.
