@@ -231,4 +231,4 @@ A buffer gate is a logic gate that changes its input signal to the opposite stat
 
 ## 🔗Links
 - 👯 Web hosting company [EliasDH.com](https://eliasdh.com).
-- 📫 How to reach us eliasdehondt@outlook.com.
+- 📫 How to reach us elias.dehondt@outlook.com
