@@ -120,18 +120,18 @@ sudo apt-get install google-cloud-sdk google-cloud-sdk-anthos-auth google-cloud-
 gcloud init
 ```
 
-![logo](/Images/How-To-Configure-GCloud-CLI-1.png)
+![How-To-Configure-GCloud-CLI-1](/Images/How-To-Configure-GCloud-CLI-1.png)
 
 > Type `Y` to get started.
 
 
-![logo](/Images/How-To-Configure-GCloud-CLI-2.png)
+![How-To-Configure-GCloud-CLI-2](/Images/How-To-Configure-GCloud-CLI-2.png)
 
 > Go to the link and select your account and click `Allow`.
 > Copy the code and paste it in the terminal.
 
 
-![logo](/Images/How-To-Configure-GCloud-CLI-3.png)
+![How-To-Configure-GCloud-CLI-3](/Images/How-To-Configure-GCloud-CLI-3.png)
 
 > Select the project you want to use. If you don't have a project, create one.
 
