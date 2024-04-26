@@ -22,6 +22,8 @@
 
 The Google Cloud CLI is a command-line tool that provides a way to manage resources on Google Cloud Platform. It is a unified tool that allows you to perform many tasks, such as deploying applications, managing APIs, and monitoring your Google Cloud Platform services.
 
+[Cloud Google SDK](https://cloud.google.com/sdk/docs/install#deb)
+
 ## ✨Steps
 
 ### 👉Step 1: Update and upgrade system
