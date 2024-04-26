@@ -8,7 +8,7 @@
 3. [✨Steps](#✨steps)
     1. [👉Step 1: Update and upgrade system](#👉step-1-update-and-upgrade-system)
     2. [👉Step 2: Install tools](#👉step-2-install-tools)
-    3. [👉Step 3: Import the Google Cloud public key](#👉step-3-import-the-google-cloud-public-key)
+    3. [👉Step 3: Download google cloud CLI](#👉step-3-download-google-cloud-cli)
     4. [👉Step 4: Add the gcloud CLI distribution URI as a package source](#👉step-4-add-the-gcloud-cli-distribution-uri-as-a-package-source)
     5. [👉Step 5: Update and install the gcloud CLI](#👉step-5-update-and-install-the-gcloud-cli)
     6. [👉Step 6: (Optional) Install any of the following additional components](#👉step-6-optional-install-any-of-the-following-additional-components)
@@ -36,20 +36,37 @@ sudo apt-get update && sudo apt-get upgrade -y
 sudo apt-get install apt-transport-https ca-certificates gnupg curl sudo -y
 ```
 
-### 👉Step 3: Import the Google Cloud public key
+### 👉Step 3: Download google cloud CLI
 
-- For newer distributions (Debian 9+ or Ubuntu 18.04+) run the following command:
-    ```bash
-    curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo gpg --dearmor -o /usr/share/keyrings/cloud.google.gpg
-    ```
-- For older distributions, run the following command:
-    ```bash
-    curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key --keyring /usr/share/keyrings/cloud.google.gpg add -
-    ```
-- If your distribution's apt-key command doesn't support the --keyring argument, run the following command:
-    ```bash	
-    curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
-    ```
+- Download the Google Cloud CLI archive:
+```bash
+curl -O https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-cli-473.0.0-linux-x86_64.tar.gz
+```
+
+- Unpack the archive:
+```bash
+tar -xf google-cloud-cli-473.0.0-linux-x86_64.tar.gz
+```
+
+- Run the install script:
+```bash
+./google-cloud-sdk/install.sh
+```
+
+- Run the following command to initialize the gcloud CLI:
+```bash
+gcloud init
+```
+
+- Set `./google-cloud-sdk/bin/` in your PATH environment variable to run the gcloud CLI from any directory.
+```bash
+export PATH=$PATH:./google-cloud-sdk/bin/
+```
+
+- To verify the installation, run the following command:
+```bash
+gcloud --version
+```
 
 ### 👉Step 4: Add the gcloud CLI distribution URI as a package source
 
