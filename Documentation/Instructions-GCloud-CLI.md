@@ -33,7 +33,7 @@ sudo apt-get update && sudo apt-get upgrade -y
 ### 👉Step 2: Install tools
 
 ```bash
-sudo apt-get install apt-transport-https ca-certificates gnupg curl sudo
+sudo apt-get install apt-transport-https ca-certificates gnupg curl sudo -y
 ```
 
 ### 👉Step 3: Import the Google Cloud public key
