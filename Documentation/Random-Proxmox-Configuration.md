@@ -92,6 +92,15 @@ sudo resize2fs /dev/mapper/pve-root
 
 Credit: [Youtube Programming Stuff](https://www.youtube.com/watch?v=rMe3pd2sBf4)
 
+### 👉Post 5: Remove Enterprise Repository
+
+```bash
+nano /etc/apt/sources.list
+ls /etc/apt/sources.list.d/
+rm /etc/apt/sources.list.d/pve-enterprise.list.dpkg-dist
+```
+
+
 ## 🔗Links
 - 👯 Web hosting company [EliasDH.com](https://eliasdh.com).
 - 📫 How to reach us elias.dehondt@outlook.com
