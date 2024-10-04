@@ -10,6 +10,7 @@
     2. [👉Post 2: Proxmox node web GUI theme modificaties](#👉post-2-proxmox-node-web-gui-theme-modificaties)
     3. [👉Post 3: Remove node and cluster Proxmox](#👉post-3-remove-node-and-cluster-proxmox)
     4. [👉Post 4: Remove (local-lvm) Proxmox](#👉post-4-remove-local-lvm-proxmox)
+    5. [👉Post 5: Remove Enterprise Repository](#👉post-5-remove-enterprise-repository)
 4. [🔗Links](#🔗links)
 
 ---
@@ -42,10 +43,8 @@ Port = E-/ I-/
 ### 👉Post 2: Proxmox node web GUI theme modificaties
 > This is a collection of modifications that I have made to the Proxmox web GUI theme. I have made these modifications to make the web GUI more to my liking.
 ```bash
-sudo apt update && sudo apt install wget curl -y
-wget https://raw.githubusercontent.com/Weilbyte/PVEDiscordDark/master/PVEDiscordDark.sh
-chmod +x PVEDiscordDark.sh 
-sudo ./PVEDiscordDark.sh
+apt update && apt install wget curl -y
+bash <(curl -s https://raw.githubusercontent.com/Weilbyte/PVEDiscordDark/master/PVEDiscordDark.sh ) install
 ```
 Credit: [GitHub Weilbyte](https://github.com/Weilbyte)
 
