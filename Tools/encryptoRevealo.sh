@@ -6,8 +6,9 @@
 ############################
 # encryptoRevealo.sh
 
-curl -o variables.conf https://raw.githubusercontent.com/EliasDH-com/Documentation/refs/heads/main/Tools/variables.conf > /dev/null 2>&1
-curl -o functions.conf https://raw.githubusercontent.com/EliasDH-com/Documentation/refs/heads/main/Tools/functions.conf > /dev/null 2>&1
+BASE_URL="https://raw.githubusercontent.com/EliasDH-com/Documentation/refs/heads/main/Tools"
+curl -o variables.conf "$BASE_URL/variables.conf" > /dev/null 2>&1
+curl -o functions.conf "$BASE_URL/functions.conf" > /dev/null 2>&1
 
 source variables.conf
 source functions.conf
