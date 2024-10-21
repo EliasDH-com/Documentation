@@ -16,7 +16,7 @@ source functions.conf
 
 function main() { # Function: Main function.
     check_privileges
-    check_dependencies "dialog" "curl" "python3"
+    check_dependencies "dialog" "curl"
 
     dialog --title "Welcome to the Tools menu!" --msgbox "\n$ASCII_LOGO\n" 20 62
 
@@ -35,11 +35,9 @@ function main() { # Function: Main function.
 
     if [ -z "$CHOICE" ]; then error_exit_ui "No script selected."; fi
 
-    if [[ "$CHOICE" == *.sh ]]; then bash <(curl -s $BASE_URL/$CHOICE)
-    elif [[ "$CHOICE" == *.py ]]; then python3 <(curl -s $BASE_URL/$CHOICE)
-    else error_exit_ui "Unknown file type selected."; fi
+    bash <(curl -s $BASE_URL/$CHOICE)
 
-    remove_files "variables.conf" "functions.conf" "$CHOICE"
+    remove_files "variables.conf" "functions.conf"
     exit 0
 }
 
