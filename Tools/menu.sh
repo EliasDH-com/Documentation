@@ -6,8 +6,11 @@
 ############################
 # menu.sh
 
-source ./variables.conf
-source ./functions.conf
+curl -o variables.conf https://raw.githubusercontent.com/EliasDH-com/Documentation/refs/heads/main/Tools/variables.conf > /dev/null 2>&1
+curl -o functions.conf https://raw.githubusercontent.com/EliasDH-com/Documentation/refs/heads/main/Tools/functions.conf > /dev/null 2>&1
+
+source variables.conf
+source functions.conf
 
 function main() { # Function: Main function.
     check_privileges
@@ -46,6 +49,7 @@ function main() { # Function: Main function.
     fi
 
     bash "$CHOICE"
+    rm variables.conf functions.conf
     exit 0
 }
 
