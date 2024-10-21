@@ -17,9 +17,7 @@ get_user_input() { # Function: Get user input.
     if [ "$1" == "encrypt" ]; then # Get a list of files and directories in the current directory
         local files=($(find . -maxdepth 1 ! -name "*.tar.gz.gpg"))
 
-        if [ ${#files[@]} -eq 0 ]; then
-            error_exit_ui "No files or directories found."
-        fi
+        if [ ${#files[@]} -eq 0 ]; then error_exit_ui "No files or directories found."; fi
 
         local menu_options=()
         for file in "${files[@]}"; do
@@ -27,21 +25,15 @@ get_user_input() { # Function: Get user input.
         done
 
         CHOICE=$(dialog --title "Select File or Directory" --menu "Choose a file or directory to encrypt:" 15 50 ${#menu_options[@]} "${menu_options[@]}" 3>&1 1>&2 2>&3 3>&-)
-        if [ -z "$CHOICE" ]; then
-            error_exit_ui "No file or directory selected."
-        fi
+        if [ -z "$CHOICE" ]; then error_exit_ui "No file or directory selected."; fi
         DIRECTORY="$CHOICE"
 
         PASSWORD=$(dialog --title "Enter Password" --passwordbox "Enter the password:" 8 40 3>&1 1>&2 2>&3 3>&-)
-        if [ -z "$PASSWORD" ]; then
-            error_exit_ui "No password provided."
-        fi
+        if [ -z "$PASSWORD" ]; then error_exit_ui "No password provided."; fi
     elif [ "$1" == "decrypt" ]; then # Get a list of encrypted files in the current directory
         local files=($(ls -p | grep ".tar.gz.gpg" | tr '\n' ' '))
 
-        if [ ${#files[@]} -eq 0 ]; then
-            error_exit_ui "No encrypted files found."
-        fi
+        if [ ${#files[@]} -eq 0 ]; then error_exit_ui "No encrypted files found."; fi
 
         local menu_options=()
         for file in "${files[@]}"; do
@@ -49,18 +41,14 @@ get_user_input() { # Function: Get user input.
         done
 
         CHOICE=$(dialog --title "Select Encrypted File" --menu "Choose a file to decrypt:" 15 60 ${#menu_options[@]} "${menu_options[@]}" 3>&1 1>&2 2>&3 3>&-)
-        if [ -z "$CHOICE" ]; then
-            error_exit_ui "No file selected."
-        fi
+        if [ -z "$CHOICE" ]; then error_exit_ui "No file selected."; fi
         DIRECTORY="${CHOICE%.tar.gz.gpg}"
 
         PASSWORD=$(dialog --title "Enter Password" --passwordbox "Enter the password:" 8 40 3>&1 1>&2 2>&3 3>&-)
-        if [ -z "$PASSWORD" ]; then
-            error_exit_ui "No password provided."
-        fi
+        if [ -z "$PASSWORD" ]; then error_exit_ui "No password provided."; fi
     fi
 
-    echo "$DIRECTORY" "$PASSWORD" # Return directory and password via stdout
+    echo "$DIRECTORY" "$PASSWORD"
 }
 
 encrypt_directory() { # Function: Encrypt a directory.
@@ -91,17 +79,11 @@ decrypt_directory() { # Function: Decrypt a directory.
             else
                 dialog --msgbox "Incorrect password. Please try again." 5 60
                 PASSWORD=$(dialog --title "Enter Password" --passwordbox "Enter the password:" 8 40 3>&1 1>&2 2>&3 3>&-)
-                if [ -z "$PASSWORD" ]; then
-                    dialog --msgbox "No password provided." 5 60
-                    clear
-                    exit 1
-                fi
+                if [ -z "$PASSWORD" ]; then error_exit_ui "No password provided."; fi
             fi
         done
     else
         error_exit_ui "Encrypted file does not exist: $1.tar.gz.gpg"
-        clear
-        exit 1
     fi
 }
 
@@ -112,12 +94,10 @@ function main() { # Function: Main function.
 
     case $CHOICE in
         1)
-            local USER_INPUT=$(get_user_input "encrypt")
-            encrypt_directory $USER_INPUT
+            encrypt_directory $(get_user_input "encrypt")
             ;;
         2)
-            local USER_INPUT=$(get_user_input "decrypt")
-            decrypt_directory $USER_INPUT
+            decrypt_directory $(get_user_input "decrypt")
             ;;
         *)
             dialog --msgbox "Invalid choice." 5 60
