@@ -23,14 +23,6 @@ declare -A locations=(
     ["Berlin"]="2950159"
 )
 
-setup_menuoptions() { # Function: Setup menu options.
-    local MENU_OPTIONS=()
-    for city in "${!locations[@]}"; do
-        MENU_OPTIONS+=("$city" "$city")
-    done
-    echo "${MENU_OPTIONS[@]}"
-}
-
 get_weather() { # Function: Get weather information.
     local CITY_NAME=$1
     local CITY_ID=$2
@@ -53,7 +45,10 @@ main() { # Function: Main function.
     check_privileges
     check_dependencies "dialog" "curl" "gpg" "jq"
 
-    local MENU_OPTIONS=($(setup_menuoptions))
+    local MENU_OPTIONS=()
+    for city in "${!locations[@]}"; do
+        MENU_OPTIONS+=("$city" "$city")
+    done
 
     local CHOICE=$(dialog --title "Weather Locations" --menu "Choose a location to pick it up again:" 15 50 ${#MENU_OPTIONS[@]} "${MENU_OPTIONS[@]}" 3>&1 1>&2 2>&3 3>&-)
 

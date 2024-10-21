@@ -13,6 +13,15 @@ curl -o functions.conf "$RAW_GITHUB_URL/functions.conf" > /dev/null 2>&1
 source ./variables.conf
 source ./functions.conf
 
+function setup_menuoptions() { # Function: Setup menu options.
+    local FILES=("$@")
+    local MENU_OPTIONS=()
+    for file in "${FILES[@]}"; do
+        MENU_OPTIONS+=("$file" "$file")
+    done
+    echo "${MENU_OPTIONS[@]}"
+}
+
 function get_user_input() { # Function: Get user input.
     local CHOICE
     local PASSWORD
@@ -23,10 +32,7 @@ function get_user_input() { # Function: Get user input.
 
         if [ ${#FILES[@]} -eq 0 ]; then error_exit_ui "No files or directories found."; fi
 
-        local MENU_OPTIONS=()
-        for file in "${FILES[@]}"; do
-            MENU_OPTIONS+=("$file" "$file")
-        done
+        local MENU_OPTIONS=($(setup_menuoptions "${FILES[@]}"))
 
         CHOICE=$(dialog --title "Select File or Directory" --menu "Choose a file or directory to encrypt:" 15 50 ${#MENU_OPTIONS[@]} "${MENU_OPTIONS[@]}" 3>&1 1>&2 2>&3 3>&-)
         if [ -z "$CHOICE" ]; then error_exit_ui "No file or directory selected."; fi
@@ -39,12 +45,9 @@ function get_user_input() { # Function: Get user input.
 
         if [ ${#FILES[@]} -eq 0 ]; then error_exit_ui "No encrypted files found."; fi
 
-        local MENU_OPTIONS=()
-        for file in "${FILES[@]}"; do
-            MENU_OPTIONS+=("$file" "$file")
-        done
+        local MENU_OPTIONS=($(setup_menuoptions "${FILES[@]}"))
 
-        CHOICE=$(dialog --title "Select Encrypted File" --menu "Choose a file to decrypt:" 15 60 ${#MENU_OPTIONS[@]} "${menu_options[@]}" 3>&1 1>&2 2>&3 3>&-)
+        CHOICE=$(dialog --title "Select Encrypted File" --menu "Choose a file to decrypt:" 15 60 ${#MENU_OPTIONS[@]} "${MENU_OPTIONS[@]}" 3>&1 1>&2 2>&3 3>&-)
         if [ -z "$CHOICE" ]; then error_exit_ui "No file selected."; fi
         DIRECTORY="${CHOICE%.tar.gz.gpg}"
 
