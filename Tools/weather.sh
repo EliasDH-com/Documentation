@@ -27,10 +27,8 @@ get_weather() { # Function: Get weather information.
     local CITY_NAME=$1
     local CITY_ID=$2
 
-    # API call
     local RESPONSE=$(curl -s "$OPENWEATHERMAP_URL_API?id=$CITY_ID&appid=$API_KEY&units=metric")
 
-    # Extract data using jq
     local WEATHER=$(echo "$RESPONSE" | jq -r '.weather[0].description')
     local TEMPERATURE=$(echo "$RESPONSE" | jq -r '.main.temp')
     local TEMP_MIN=$(echo "$RESPONSE" | jq -r '.main.temp_min')
