@@ -13,16 +13,6 @@ curl -o functions.conf "$RAW_GITHUB_URL/functions.conf" > /dev/null 2>&1
 source ./variables.conf
 source ./functions.conf
 
-declare -A locations=(
-    ["New York"]="5128581"
-    ["Brussels"]="2800866"
-    ["London"]="2643743"
-    ["Tokyo"]="1850147"
-    ["Sydney"]="2147714"
-    ["Paris"]="2988507"
-    ["Berlin"]="2950159"
-)
-
 get_weather() { # Function: Get weather information.
     local CITY_NAME=$1
     local CITY_ID=$2
@@ -50,16 +40,9 @@ main() { # Function: Main function.
             MENU_OPTIONS+=("$city" "${locations[$city]}")
         done
 
-        MENU_OPTIONS+=("Back" "Select a different location")
-
         CHOICE=$(dialog --title "Weather Locations" --menu "Choose a location to get the weather:" 15 50 ${#MENU_OPTIONS[@]} "${MENU_OPTIONS[@]}" 3>&1 1>&2 2>&3)
 
         if [ $? -ne 0 ]; then exit 1; fi
-
-        if [ "$CHOICE" == "Back" ]; then
-            clear
-            continue
-        fi
 
         if [ -z "$CHOICE" ]; then error_exit_ui "No location selected."; fi
 
