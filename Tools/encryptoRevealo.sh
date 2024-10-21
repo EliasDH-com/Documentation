@@ -13,38 +13,41 @@ curl -o functions.conf "$BASE_URL/functions.conf" > /dev/null 2>&1
 source variables.conf
 source functions.conf
 
+function setup_menuoptions() {
+    local MENU_OPTIONS=()
+    for file in "${$1[@]}"; do
+        MENU_OPTIONS+=("$file" "$file")
+    done
+
+    echo "${MENU_OPTIONS[@]}"
+}
+
 function get_user_input() { # Function: Get user input.
     local CHOICE
     local PASSWORD
     local DIRECTORY
 
     if [ "$1" == "encrypt" ]; then # Get a list of files and directories in the current directory
-        local files=($(find . -maxdepth 1 ! -name "*.tar.gz.gpg"))
+        local FILES=($(find . -maxdepth 1 ! -name "*.tar.gz.gpg"))
 
-        if [ ${#files[@]} -eq 0 ]; then error_exit_ui "No files or directories found."; fi
+        if [ ${#FILES[@]} -eq 0 ]; then error_exit_ui "No files or directories found."; fi
 
-        local menu_options=()
-        for file in "${files[@]}"; do
-            menu_options+=("$file" "$file")
-        done
+        local MENU_OPTIONS=($(setup_menuoptions "${FILES[@]}"))
 
-        CHOICE=$(dialog --title "Select File or Directory" --menu "Choose a file or directory to encrypt:" 15 50 ${#menu_options[@]} "${menu_options[@]}" 3>&1 1>&2 2>&3 3>&-)
+        CHOICE=$(dialog --title "Select File or Directory" --menu "Choose a file or directory to encrypt:" 15 50 ${#MENU_OPTIONS[@]} "${MENU_OPTIONS[@]}" 3>&1 1>&2 2>&3 3>&-)
         if [ -z "$CHOICE" ]; then error_exit_ui "No file or directory selected."; fi
         DIRECTORY="$CHOICE"
 
         PASSWORD=$(dialog --title "Enter Password" --passwordbox "Enter the password:" 8 40 3>&1 1>&2 2>&3 3>&-)
         if [ -z "$PASSWORD" ]; then error_exit_ui "No password provided."; fi
     elif [ "$1" == "decrypt" ]; then # Get a list of encrypted files in the current directory
-        local files=($(ls -p | grep ".tar.gz.gpg" | tr '\n' ' '))
+        local FILES=($(ls -p | grep ".tar.gz.gpg" | tr '\n' ' '))
 
-        if [ ${#files[@]} -eq 0 ]; then error_exit_ui "No encrypted files found."; fi
+        if [ ${#FILES[@]} -eq 0 ]; then error_exit_ui "No encrypted files found."; fi
 
-        local menu_options=()
-        for file in "${files[@]}"; do
-            menu_options+=("$file" "$file")
-        done
+        local MENU_OPTIONS=($(setup_menuoptions "${FILES[@]}"))
 
-        CHOICE=$(dialog --title "Select Encrypted File" --menu "Choose a file to decrypt:" 15 60 ${#menu_options[@]} "${menu_options[@]}" 3>&1 1>&2 2>&3 3>&-)
+        CHOICE=$(dialog --title "Select Encrypted File" --menu "Choose a file to decrypt:" 15 60 ${#MENU_OPTIONS[@]} "${MENU_OPTIONS[@]}" 3>&1 1>&2 2>&3 3>&-)
         if [ -z "$CHOICE" ]; then error_exit_ui "No file selected."; fi
         DIRECTORY="${CHOICE%.tar.gz.gpg}"
 
