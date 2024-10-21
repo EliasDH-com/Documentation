@@ -33,7 +33,8 @@ function main() { # Function: Main function.
     local CHOICE=$(dialog --title "Select a Script" --menu "Choose a script to run:" 15 50 "${#MENU_OPTIONS[@]}" "${MENU_OPTIONS[@]}" 3>&1 1>&2 2>&3)
 
     if [ -z "$CHOICE" ]; then error_exit_ui "No script selected."; fi
-    dialog --title "$BASE_URL/$CHOICE"
+
+    dialog --title "ss" --msgbox ""$BASE_URL/$CHOICE"" 5 60
 
     bash <(curl -s $BASE_URL/$CHOICE)
 
