@@ -6,9 +6,9 @@
 ############################
 # weather.sh
 
-BASE_URL="https://raw.githubusercontent.com/EliasDH-com/Documentation/refs/heads/main/Tools"
-curl -o variables.conf "$BASE_URL/variables.conf" > /dev/null 2>&1
-curl -o functions.conf "$BASE_URL/functions.conf" > /dev/null 2>&1
+RAW_GITHUB_URL="https://raw.githubusercontent.com/EliasDH-com/Documentation/refs/heads/main/Tools"
+curl -o variables.conf "$RAW_GITHUB_URL/variables.conf" > /dev/null 2>&1
+curl -o functions.conf "$RAW_GITHUB_URL/functions.conf" > /dev/null 2>&1
 
 source ./variables.conf
 source ./functions.conf
@@ -35,17 +35,23 @@ get_weather() { # Function: Get weather information.
     local CITY_NAME=$1
     local CITY_ID=$2
 
-    local RESPONSE=$(curl -s "$BASE_URL?id=$CITY_ID&appid=$API_KEY&units=metric")
+    # API-aanroep
+    local RESPONSE=$(curl -s "$OPENWEATHERMAP_URL_API?id=$CITY_ID&appid=$API_KEY&units=metric")
 
-    local WEATHER=$(echo $RESPONSE | jq '.weather[0].description' | tr -d '"')
-    local TEMPERATURE=$(echo $RESPONSE | jq '.main.temp' | tr -d '"')
+    # Gegevens extraheren met jq
+    local WEATHER=$(echo "$RESPONSE" | jq -r '.weather[0].description')
+    local TEMPERATURE=$(echo "$RESPONSE" | jq -r '.main.temp')
+    local TEMP_MIN=$(echo "$RESPONSE" | jq -r '.main.temp_min')
+    local TEMP_MAX=$(echo "$RESPONSE" | jq -r '.main.temp_max')
+    local HUMIDITY=$(echo "$RESPONSE" | jq -r '.main.humidity')
 
-    dialog --msgbox "Weer in $CITY_NAME: $WEATHER\nTemperatuur: ${TEMPERATURE}°C" 10 50
+    # Weerbericht weergeven
+    dialog --msgbox "Weer in $CITY_NAME:\nBeschrijving: $WEATHER\nTemperatuur: ${TEMPERATURE}°C\nMinimale temperatuur: ${TEMP_MIN}°C\nMaximale temperatuur: ${TEMP_MAX}°C\nVochtigheid: ${HUMIDITY}%" 15 60
 }
 
 main() { # Function: Main function.
     check_privileges
-    check_dependencies "dialog" "gpg" "jq"
+    check_dependencies "dialog" "curl" "gpg" "jq"
 
     local MENU_OPTIONS=($(setup_menuoptions))
 
@@ -53,7 +59,7 @@ main() { # Function: Main function.
 
     if [ -z "$CHOICE" ]; then error_exit_ui "No location selected."; fi
 
-    get_weather "$CHOICE" "${LOCATIONS[$CHOICE]}"
+    get_weather "$CHOICE" "${locations[$CHOICE]}"
     remove_files "variables.conf" "functions.conf"
     clear
 }

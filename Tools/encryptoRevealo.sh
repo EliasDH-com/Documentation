@@ -6,9 +6,9 @@
 ############################
 # encryptoRevealo.sh
 
-BASE_URL="https://raw.githubusercontent.com/EliasDH-com/Documentation/refs/heads/main/Tools"
-curl -o variables.conf "$BASE_URL/variables.conf" > /dev/null 2>&1
-curl -o functions.conf "$BASE_URL/functions.conf" > /dev/null 2>&1
+RAW_GITHUB_URL="https://raw.githubusercontent.com/EliasDH-com/Documentation/refs/heads/main/Tools"
+curl -o variables.conf "$RAW_GITHUB_URL/variables.conf" > /dev/null 2>&1
+curl -o functions.conf "$RAW_GITHUB_URL/functions.conf" > /dev/null 2>&1
 
 source ./variables.conf
 source ./functions.conf
@@ -96,7 +96,7 @@ function decrypt_directory() { # Function: Decrypt a directory.
 
 function main() { # Function: Main function.
     check_privileges
-    check_dependencies "dialog" "gpg" "tar" "find"
+    check_dependencies "dialog" "curl" "gpg" "tar" "find"
     local CHOICE=$(dialog --menu "Choose an option" 15 60 2 1 "Encrypt a file/directory" 2 "Decrypt a file/directory" 3>&1 1>&2 2>&3 3>&-)
 
     case $CHOICE in
