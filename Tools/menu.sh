@@ -35,7 +35,9 @@ function main() { # Function: Main function.
 
     if [ -z "$CHOICE" ]; then error_exit_ui "No script selected."; fi
 
-    bash <(curl -s $BASE_URL/$CHOICE)
+    if [[ "$CHOICE" == *.sh ]]; then bash <(curl -s $BASE_URL/$CHOICE)
+    elif [[ "$CHOICE" == *.py ]]; then python3 <(curl -s $BASE_URL/$CHOICE)
+    else error_exit_ui "Unknown file type selected."; fi
 
     remove_files "variables.conf" "functions.conf" "$CHOICE"
     exit 0
