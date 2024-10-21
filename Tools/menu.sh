@@ -16,7 +16,7 @@ source functions.conf
 
 function main() { # Function: Main function.
     check_privileges
-    check_dependencies "dialog" "curl"
+    check_dependencies "dialog" "curl" "python3"
 
     dialog --title "Welcome to the Tools menu!" --msgbox "\n$ASCII_LOGO\n" 20 62
 
@@ -34,7 +34,6 @@ function main() { # Function: Main function.
     local CHOICE=$(dialog --title "Select a Script" --menu "Choose a script to run:" 15 50 "${#MENU_OPTIONS[@]}" "${MENU_OPTIONS[@]}" 3>&1 1>&2 2>&3)
 
     if [ -z "$CHOICE" ]; then error_exit_ui "No script selected."; fi
-    error_exit_ui "$CHOICE"
 
     if [[ "$CHOICE" == *.sh ]]; then bash <(curl -s $BASE_URL/$CHOICE)
     elif [[ "$CHOICE" == *.py ]]; then python3 <(curl -s $BASE_URL/$CHOICE)
