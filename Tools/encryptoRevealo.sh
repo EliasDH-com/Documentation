@@ -12,7 +12,7 @@ curl -o functions.conf https://raw.githubusercontent.com/EliasDH-com/Documentati
 source variables.conf
 source functions.conf
 
-get_user_input() { # Function: Get user input.
+function get_user_input() { # Function: Get user input.
     local CHOICE
     local PASSWORD
     local DIRECTORY
@@ -54,13 +54,13 @@ get_user_input() { # Function: Get user input.
     echo "$DIRECTORY" "$PASSWORD"
 }
 
-encrypt_directory() { # Function: Encrypt a directory.
+function encrypt_directory() { # Function: Encrypt a directory.
     if [ -e "$1" ]; then
         dialog --infobox "Encrypting: $1" 5 40
         tar -czvf "$1.tar.gz" "$1" > /dev/null 2>&1
-        rm -r "$1"
+        remove_files -r "$1"
         echo "$2" | gpg --batch --yes --passphrase-fd 0 --symmetric --cipher-algo AES256 "$1.tar.gz"
-        rm "$1.tar.gz"
+        remove_files "$1.tar.gz"
         gpgconf --kill gpg-agent
         dialog --msgbox "Encryption complete: $1.tar.gz.gpg" 5 60
     else
@@ -68,15 +68,15 @@ encrypt_directory() { # Function: Encrypt a directory.
     fi
 }
 
-decrypt_directory() { # Function: Decrypt a directory.
+function decrypt_directory() { # Function: Decrypt a directory.
     local PASSWORD=$2
     if [ -f "$1.tar.gz.gpg" ]; then
         while true; do
             dialog --infobox "Decrypting file: $1.tar.gz.gpg" 5 40
             if echo "$PASSWORD" | gpg --batch --yes --passphrase-fd 0 --output "$1.tar.gz" --decrypt "$1.tar.gz.gpg"; then
-                rm "$1.tar.gz.gpg"
+                remove_files "$1.tar.gz.gpg"
                 tar -xzvf "$1.tar.gz" > /dev/null 2>&1
-                rm "$1.tar.gz"
+                remove_files "$1.tar.gz"
                 dialog --msgbox "Decryption complete: $1 is restored" 5 60
                 break
             else
@@ -103,10 +103,10 @@ function main() { # Function: Main function.
             decrypt_directory $(get_user_input "decrypt")
             ;;
         *)
-            dialog --msgbox "Invalid choice." 5 60
+            dialog --msgbox "No option selected." 5 30
             ;;
     esac
-    rm variables.conf functions.conf
+    remove_files "variables.conf" "functions.conf"
     clear
 }
 

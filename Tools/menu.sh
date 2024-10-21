@@ -21,15 +21,11 @@ function main() { # Function: Main function.
     local EXTENSIONS=("*.sh" "*.py")
     local DIRECTORY="/home/$USER/tools"
 
-    if [ ! -d "$DIRECTORY" ]; then
-        error_exit_ui "Directory $DIRECTORY does not exist."
-    fi
+    if [ ! -d "$DIRECTORY" ]; then error_exit_ui "Directory $DIRECTORY does not exist."; fi
 
     local FILES=$(find "$DIRECTORY" -type f \( -name "${EXTENSIONS[0]}" -o -name "${EXTENSIONS[1]}" \) | grep -v "$0" | sort)
 
-    if [ -z "$FILES" ]; then
-        error_exit_ui "No executable files were found."
-    fi
+    if [ -z "$FILES" ]; then error_exit_ui "No executable files were found."; fi
 
     local MENU_OPTIONS=()
     while IFS= read -r file; do
@@ -44,12 +40,10 @@ function main() { # Function: Main function.
 
     local CHOICE=$(dialog --title "Select a Script" --menu "Choose a script to run:" 15 50 "${#MENU_OPTIONS[@]}" "${MENU_OPTIONS[@]}" 3>&1 1>&2 2>&3)
 
-    if [ $? -ne 0 ]; then
-        error_exit_ui "No script selected."
-    fi
+    if [ -z "$CHOICE" ]; then error_exit_ui "No script selected."; fi
 
     bash "$CHOICE"
-    rm variables.conf functions.conf
+    remove_files "variables.conf" "functions.conf"
     exit 0
 }
 
