@@ -49,19 +49,18 @@ main() { # Function: Main function.
     while true; do
         local MENU_OPTIONS=()
         for city in "${!locations[@]}"; do
-            MENU_OPTIONS+=("$city" "$city")
+            MENU_OPTIONS+=("$city" "${locations[$city]}")
         done
 
-        # Add option to go back to menu
         MENU_OPTIONS+=("Back" "Select a different location")
 
         CHOICE=$(dialog --title "Weather Locations" --menu "Choose a location to get the weather:" 15 50 ${#MENU_OPTIONS[@]} "${MENU_OPTIONS[@]}" 3>&1 1>&2 2>&3)
 
-        if [ $? -ne 0 ]; then exit 1; fi  # Exit on dialog cancel
+        if [ $? -ne 0 ]; then exit 1; fi
 
         if [ "$CHOICE" == "Back" ]; then
             clear
-            continue  # Go back to the menu
+            continue
         fi
 
         if [ -z "$CHOICE" ]; then error_exit_ui "No location selected."; fi
