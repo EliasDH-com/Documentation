@@ -10,8 +10,8 @@ BASE_URL="https://raw.githubusercontent.com/EliasDH-com/Documentation/refs/heads
 curl -o variables.conf "$BASE_URL/variables.conf" > /dev/null 2>&1
 curl -o functions.conf "$BASE_URL/functions.conf" > /dev/null 2>&1
 
-source variables.conf
-source functions.conf
+source ./variables.conf
+source ./functions.conf
 
 declare -A locations=(
     ["New York"]="5128581"
