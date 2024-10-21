@@ -17,7 +17,7 @@ function setup_menuoptions() { # Function: Setup menu options.
     local FILES=("$@")
     local MENU_OPTIONS=()
 
-    for file in "${files[@]}"; do
+    for file in "${FILES[@]}"; do
         MENU_OPTIONS+=("$file" "$file")
     done
 
