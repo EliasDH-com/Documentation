@@ -13,7 +13,7 @@ curl -o functions.conf "$BASE_URL/functions.conf" > /dev/null 2>&1
 source variables.conf
 source functions.conf
 
-declare -A LOCATIONS=(
+declare -A locations=(
     ["New York"]="5128581"
     ["Brussels"]="2800866"
     ["London"]="2643743"
@@ -25,8 +25,8 @@ declare -A LOCATIONS=(
 
 setup_menuoptions() { # Function: Setup menu options.
     local MENU_OPTIONS=()
-    for i in "${!LOCATIONS[@]}"; do
-        MENU_OPTIONS+=("$i" "$i")
+    for city in "${!locations[@]}"; do
+        MENU_OPTIONS+=("$city" "$city")
     done
     echo "${MENU_OPTIONS[@]}"
 }
