@@ -34,8 +34,8 @@ function main() { # Function: Main function.
 
     if [ -z "$CHOICE" ]; then error_exit_ui "No script selected."; fi
 
-    if [[ "$CHOICE" == *.sh ]]; then bash "$CHOICE"
-    elif [[ "$CHOICE" == *.py ]]; then python3 "$CHOICE"
+    if [[ "$CHOICE" == *.sh ]]; then bash "$RAW_GITHUB_URL/$CHOICE"
+    elif [[ "$CHOICE" == *.py ]]; then python3 "$RAW_GITHUB_URL/$CHOICE"
     else error_exit_ui "Unknown script type."; fi
 
     remove_files "variables.conf" "functions.conf"
