@@ -14,21 +14,32 @@ source ./variables.conf
 source ./functions.conf
 
 get_vrt_news() {
-    local RSS_URL="https://www.vrt.be/vrtnws/nl.rss.headlines.xml"
-    local RSS_FILE="news.rss"
+    local RSS_URL_VRT="https://www.vrt.be/vrtnws/nl.rss.headlines.xml"
+    local RSS_FILE_VRT="rss_file_vrt.xml"
 
-    curl -s "$RSS_URL" -o "$RSS_FILE"
+    curl -s "$RSS_URL_VRT" -o "$RSS_FILE_VRT"
+    local NAME_OUTLET=$(grep -oPm1 "(?<=<title type=\"text\">)(.*)(?=</title>)" "$RSS_FILE_VRT")
 
-    local NEWS_TITLE=$(xmlstarlet sel -t -v "/rss/channel/item[1]/title" "$RSS_FILE")
 
-    dialog --title "VRT NWS" --msgbox "\n$NEWS_TITLE\n" 20 62
 
-    rm "$RSS_FILE"
+    local NEWS_TITLE=""
+    local NEWS_LIST=""
+
+    while IFS= read -r line; do
+        if [[ $line =~ \<title\>(.*)\<\/title\> ]]; then
+            NEWS_TITLE="${BASH_REMATCH[1]}"
+            NEWS_LIST+="$NEWS_TITLE\n"
+        fi
+    done < "$RSS_FILE_VRT"
+
+    dialog --title "VRT Nieuws" --msgbox "$NEWS_LIST" 20 80
+
+    remove_files "$RSS_FILE_VRT"
 }
 
 main() { # Function: Main function.
     check_privileges
-    check_dependencies "dialog" "curl" "gpg" "xmlstarlet"
+    check_dependencies "dialog" "curl" "gpg"
 
     get_vrt_news
 
