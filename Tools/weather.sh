@@ -13,7 +13,7 @@ curl -o functions.conf "$RAW_GITHUB_URL/functions.conf" > /dev/null 2>&1
 source ./variables.conf
 source ./functions.conf
 
-get_weather() { # Function: Get weather information.
+function get_weather() { # Function: Get weather information.
     local CITY_NAME=$1
     local CITY_ID=$2
 
@@ -29,7 +29,7 @@ get_weather() { # Function: Get weather information.
     dialog --msgbox "Weather in $CITY_NAME:\nDescription: $WEATHER\nTemperature: ${TEMPERATURE}°C\nMinimum Temperature: ${TEMP_MIN}°C\nMaximum Temperature: ${TEMP_MAX}°C\nHumidity: ${HUMIDITY}%" 15 60
 }
 
-main() { # Function: Main function.
+function main() { # Function: Main function.
     check_privileges
     check_dependencies "dialog" "curl" "gpg" "jq"
 

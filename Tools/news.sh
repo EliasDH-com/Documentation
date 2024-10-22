@@ -1,8 +1,8 @@
 #!/bin/bash
 ############################
-# @author Elias De Hondt
-# @see https://eliasdh.com
-# @since 18/10/2024
+# @author Elias De Hondt   #
+# @see https://eliasdh.com #
+# @since 18/10/2024        #
 ############################
 # news.sh
 
@@ -13,33 +13,71 @@ curl -o functions.conf "$RAW_GITHUB_URL/functions.conf" > /dev/null 2>&1
 source ./variables.conf
 source ./functions.conf
 
-get_vrt_news() {
+function get_vrt_news() { # Function: Get VRT news headlines.
     local RSS_URL_VRT="https://www.vrt.be/vrtnws/nl.rss.headlines.xml"
-    local RSS_FILE_VRT="rss_file_vrt.xml"
+    local RSS_FILE="vrt_news.xml"
 
-    curl -s "$RSS_URL_VRT" -o "$RSS_FILE_VRT"
-    local NAME_OUTLET=$(grep -oPm1 "(?<=<title type=\"text\">)(.*)(?=</title>)" "$RSS_FILE_VRT")
+    curl -s "$RSS_URL_VRT" -o "$RSS_FILE"
 
+    local TITLES=()
+    local DESCRIPTIONS=()
+    local DATES=()
+    local LINKS=()
 
+    while IFS= read -r TITLE; do
+        TITLES+=("$TITLE")
+    done < <(xmllint --xpath "//*[local-name()='entry']/*[local-name()='title']/text()" "$RSS_FILE" 2>/dev/null)
 
-    local NEWS_TITLE=""
-    local NEWS_LIST=""
+    while IFS= read -r DESCRIPTION; do
+        DESCRIPTIONS+=("$DESCRIPTION")
+    done < <(xmllint --xpath "//*[local-name()='entry']/*[local-name()='summary']/text()" "$RSS_FILE" 2>/dev/null)
 
-    while IFS= read -r line; do
-        if [[ $line =~ \<title\>(.*)\<\/title\> ]]; then
-            NEWS_TITLE="${BASH_REMATCH[1]}"
-            NEWS_LIST+="$NEWS_TITLE\n"
+    while IFS= read -r DATE; do
+        local FORMATTED_DATE=$(date -d "$DATE" +"%d/%m/%Y %H:%M")
+        DATES+=("$FORMATTED_DATE")
+    done < <(xmllint --xpath "//*[local-name()='entry']/*[local-name()='published']/text()" "$RSS_FILE" 2>/dev/null)
+
+    while IFS= read -r LINK; do
+        LINKS+=("$LINK")
+    done < <(xmllint --xpath "//*[local-name()='entry']/*[local-name()='link'][@rel='alternate']/@href" "$RSS_FILE" 2>/dev/null)
+
+    if [[ ${#TITLES[@]} -lt 1 ]]; then
+        remove_files "$RSS_FILE"
+        error_exit_ui "No news headlines found."
+    fi
+
+    local DIALOG_INPUT=()
+    for I in "${!TITLES[@]}"; do
+        DIALOG_INPUT+=("$I" "${TITLES[$I]}")
+    done
+
+    if [[ ${#DIALOG_INPUT[@]} -ge 6 ]]; then
+        local SELECTED
+        SELECTED=$(dialog --menu "VRT News Headlines" 15 80 10 "${DIALOG_INPUT[@]}" 3>&1 1>&2 2>&3)
+        if [[ -n "$SELECTED" ]]; then
+            show_article "$SELECTED"
         fi
-    done < "$RSS_FILE_VRT"
+    else
+        remove_files "$RSS_FILE"
+        error_exit_ui "Not enough news headlines found."
+    fi
 
-    dialog --title "VRT Nieuws" --msgbox "$NEWS_LIST" 20 80
-
-    remove_files "$RSS_FILE_VRT"
+    remove_files "$RSS_FILE"
 }
 
-main() { # Function: Main function.
+function show_article() { # Function: Show full article details.
+    local INDEX="$1"
+    local TITLE="${TITLES[$INDEX]}"
+    local DESCRIPTION="${DESCRIPTIONS[$INDEX]}"
+    local DATE="${DATES[$INDEX]}"
+    local LINK="${LINKS[$INDEX]}"
+
+    dialog --msgbox "Title: $TITLE\n\nDescription: $DESCRIPTION\n\nDate: $DATE\n\nLink: $LINK" 15 80
+}
+
+function main() { # Function: Main function.
     check_privileges
-    check_dependencies "dialog" "curl" "gpg"
+    check_dependencies "dialog" "curl" "xmllint"
 
     get_vrt_news
 
