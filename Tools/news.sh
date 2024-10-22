@@ -28,7 +28,7 @@ get_vrt_news() {
 
 main() { # Function: Main function.
     check_privileges
-    check_dependencies "dialog" "curl" "gpg"
+    check_dependencies "dialog" "curl" "gpg" "xmlstarlet"
 
     get_vrt_news
 
