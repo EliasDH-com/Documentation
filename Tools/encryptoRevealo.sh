@@ -112,6 +112,7 @@ function main() { # Function: Main function.
     esac
     remove_files "variables.conf" "functions.conf"
     clear
+    exit 0
 }
 
 main

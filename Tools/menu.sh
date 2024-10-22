@@ -39,6 +39,7 @@ function main() { # Function: Main function.
     else error_exit_ui "Unknown script type."; fi
 
     remove_files "variables.conf" "functions.conf"
+    clear
     exit 0
 }
 

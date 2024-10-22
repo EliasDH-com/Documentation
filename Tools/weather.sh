@@ -51,6 +51,8 @@ main() { # Function: Main function.
     done
 
     remove_files "variables.conf" "functions.conf"
+    clear
+    exit 0
 }
 
 main
