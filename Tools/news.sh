@@ -13,31 +13,24 @@ curl -o functions.conf "$RAW_GITHUB_URL/functions.conf" > /dev/null 2>&1
 source ./variables.conf
 source ./functions.conf
 
-get_news() { # Function: Fetch Belgian news from RSS feeds.
+get_vrt_news() {
     local RSS_URL="https://www.vrt.be/vrtnws/nl.rss.headlines.xml"
-    local RESPONSE=$(curl -s "$RSS_URL")
+    local RSS_FILE="news.rss"
 
-    local NEWS=$(echo "$RESPONSE" | grep -oP "<title>\K(.*)(?=</title>)" | sed -n '2,6p')
-    local NEWS_COUNT=$(echo "$NEWS" | wc -l)
+    curl -s "$RSS_URL" -o "$RSS_FILE"
 
-    local NEWS_ARRAY=()
-    while IFS= read -r LINE; do
-        NEWS_ARRAY+=("$LINE")
-    done <<< "$NEWS"
+    local NEWS_TITLE=$(xmlstarlet sel -t -v "/rss/channel/item[1]/title" "$RSS_FILE")
 
-    local NEWS_LIST=""
-    for ((i = 0; i < NEWS_COUNT; i++)); do
-        NEWS_LIST+="$((i + 1)). ${NEWS_ARRAY[$i]}\n"
-    done
+    dialog --title "VRT NWS" --msgbox "\n$NEWS_TITLE\n" 20 62
 
-    dialog --title "Belgian News" --msgbox "$NEWS_LIST" 20 70
+    rm "$RSS_FILE"
 }
 
 main() { # Function: Main function.
     check_privileges
     check_dependencies "dialog" "curl" "gpg"
 
-    get_news
+    get_vrt_news
 
     remove_files "variables.conf" "functions.conf"
     clear
