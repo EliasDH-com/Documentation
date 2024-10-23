@@ -77,7 +77,7 @@ function show_article() { # Function: Show full article details.
 
 function main() { # Function: Main function.
     check_privileges
-    check_dependencies "dialog" "curl" "xmllint"
+    check_dependencies "dialog" "curl" "libxml2-utils"
 
     get_vrt_news
 
