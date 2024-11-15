@@ -7,7 +7,12 @@
 2. [🖖Introduction](#🖖introduction)
 3. [✨Steps](#✨steps)
     1. [👉Step 1: Update and upgrade the system](#👉step-1-update-and-upgrade-the-system)
-
+    2. [👉Step 2: Set time zone](#👉step-2-set-time-zone)
+    3. [👉Step 3: Network](#👉step-3-network)
+    4. [👉Step 4: Set the SSH banner](#👉step-4-set-the-ssh-banner)
+    5. [👉Step 5: Install Uptime Kuma](#👉step-5-install-uptime-kuma)
+    6. [👉Step 6: Set Up Uptime Kuma as a Systemd Service](#👉step-6-set-up-uptime-kuma-as-a-systemd-service)
+    7. [👉Step 7: Setup NGINX status page proxy](#👉step-7-setup-nginx-status-page-proxy)
 4. [🔗Links](#🔗links)
 
 ---
