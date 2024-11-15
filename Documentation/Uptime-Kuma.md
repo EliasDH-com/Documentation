@@ -155,6 +155,9 @@ npm run build
 sudo useradd -m -s /bin/bash uptime-kuma-user
 echo "uptime-kuma-user:123" | sudo chpasswd
 sudo id uptime-kuma-user
+
+sudo chown -R uptime-kuma-user:uptime-kuma-user /uptime-kuma
+sudo chmod -R 755 /uptime-kuma
 ```
 
 
@@ -200,6 +203,17 @@ journalctl -u uptime-kuma.service
 ```
 
 - Go to the Uptime Kuma dashboard `http://localhost:3001`
+
+- Stop the Uptime Kuma service
+```bash
+sudo systemctl stop uptime-kuma.service
+# sudo systemctl restart uptime-kuma.service
+```
+
+- Disable the Uptime Kuma service
+```bash
+sudo systemctl disable uptime-kuma.service
+```
 
 ## 🔗Links
 - 👯 Web hosting company [EliasDH.com](https://eliasdh.com).
