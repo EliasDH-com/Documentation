@@ -215,6 +215,47 @@ sudo systemctl stop uptime-kuma.service
 sudo systemctl disable uptime-kuma.service
 ```
 
+### 👉Step 7: Setup NGINX status page proxy
+
+- Install NGINX
+```bash
+sudo apt install nginx -y
+sudo rm /etc/nginx/sites-enabled/default
+
+sudo nano /etc/nginx/sites-available/uptime-kuma
+```
+
+- Add the following content
+```nginx
+server {
+    listen 80;
+
+    server_name _;
+
+    location = / {
+        return 301 /status/main;
+    }
+
+    location / {
+        proxy_pass http://127.0.0.1:3001;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    }
+
+    error_log /var/log/nginx/uptime-kuma.error.log;
+    access_log /var/log/nginx/uptime-kuma.access.log;
+}
+```
+
+- Enable the Uptime Kuma NGINX configuration
+```bash
+sudo ln -s /etc/nginx/sites-available/uptime-kuma /etc/nginx/sites-enabled/
+sudo systemctl restart nginx
+```
+
+> **Note:** If you go to `http://localhost:3001` you will see the Uptime Kuma dashboard. If you go to `http://localhost:80` you will see the UpTime Kuma status page `/status/main`.
+
 ## 🔗Links
 - 👯 Web hosting company [EliasDH.com](https://eliasdh.com).
 - 📫 How to reach us elias.dehondt@outlook.com
