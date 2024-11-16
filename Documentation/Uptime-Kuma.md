@@ -12,7 +12,7 @@
     4. [👉Step 4: Set the SSH banner](#👉step-4-set-the-ssh-banner)
     5. [👉Step 5: Install Uptime Kuma](#👉step-5-install-uptime-kuma)
     6. [👉Step 6: Set Up Uptime Kuma as a Systemd Service](#👉step-6-set-up-uptime-kuma-as-a-systemd-service)
-    7. [👉Step 7: Setup NGINX status page proxy](#👉step-7-setup-nginx-status-page-proxy)
+    7. [👉Step 7: Small modifications to source code](#👉step-7-small-modifications-to-source-code)
 4. [🔗Links](#🔗links)
 
 ---
@@ -144,7 +144,8 @@ sudo apt install git
 cd /
 git clone https://github.com/louislam/uptime-kuma.git
 cd uptime-kuma
-sudo nano config.json
+sudo rm -r CONTRIBUTING.md LICENSE SECURITY.md CODE_OF_CONDUCT.md README.md .gitignore
+sudo rm -r .github .git docker test
 npm install
 ```
 
@@ -220,46 +221,44 @@ sudo systemctl stop uptime-kuma.service
 sudo systemctl disable uptime-kuma.service
 ```
 
-### 👉Step 7: Setup NGINX status page proxy
+### 👉Step 7: Small modifications to source code
 
-- Install NGINX
+- Open the file in the `uptime-kuma` directory
 ```bash
-sudo apt install nginx -y
-sudo rm /etc/nginx/sites-enabled/default
-
-sudo nano /etc/nginx/sites-available/uptime-kuma
+sudo nano /uptime-kuma/src/router.js
 ```
 
-- Add the following content
-```nginx
-server {
-    listen 80;
-
-    server_name _;
-
-    location = / {
-        return 301 /status/main;
-    }
-
-    location / {
-        proxy_pass http://127.0.0.1:3001;
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-    }
-
-    error_log /var/log/nginx/uptime-kuma.error.log;
-    access_log /var/log/nginx/uptime-kuma.access.log;
-}
+```js
+{
+    path: "/",
+    component: Entry,
+},
+// To
+{
+    path: "/",
+    redirect: "/status/main", // Makes "/" point to "/status/main"
+},
+{
+    path: "/status/main",
+    component: StatusPage, // Status page component
+},
 ```
 
-- Enable the Uptime Kuma NGINX configuration
+- Open the file in the `uptime-kuma` directory
 ```bash
-sudo ln -s /etc/nginx/sites-available/uptime-kuma /etc/nginx/sites-enabled/
-sudo systemctl restart nginx
+sudo nano /uptime-kuma/server/server.js
 ```
 
-> **Note:** If you go to `http://localhost:3001` you will see the Uptime Kuma dashboard. If you go to `http://localhost:80` you will see the UpTime Kuma status page `/status/main`.
+```js
+response.redirect("/dashboard");
+// To
+response.redirect("/status/main");
+```
+
+- Save the file and restart the Uptime Kuma service
+```bash
+sudo systemctl restart uptime-kuma.service
+```
 
 ## 🔗Links
 - 👯 Web hosting company [EliasDH.com](https://eliasdh.com).
