@@ -125,7 +125,7 @@ Welcome to server [UptimeKuma]
 
 ### 👉Step 5: Install Uptime Kuma
 
-- Install nodejs and npm
+- Install nodejs and npm.
 ```bash
 sudo apt install -y curl
 curl -fsSL https://deb.nodesource.com/setup_21.x | sudo -E bash -
@@ -138,7 +138,7 @@ node -v
 npm -v
 ```
 
-- Download & Install Uptime Kuma
+- Download & Install Uptime Kuma.
 ```bash
 sudo apt install git
 cd /
@@ -149,14 +149,14 @@ sudo rm -r .github .git docker test
 npm install
 ```
 
-- Start Uptime Kuma
+- Start Uptime Kuma.
 ```bash
 npm run build
 ```
 
 ### 👉Step 6: Set Up Uptime Kuma as a Systemd Service
 
-- Create a new user for Uptime Kuma
+- Create a new user for Uptime Kuma.
 ```bash
 sudo useradd -m -s /bin/bash uptime-kuma-user
 echo "uptime-kuma-user:123" | sudo chpasswd
@@ -167,12 +167,12 @@ sudo chmod -R 755 /uptime-kuma
 ```
 
 
-- Create a new systemd service file
+- Create a new systemd service file.
 ```bash
 sudo nano /etc/systemd/system/uptime-kuma.service
 ```
 
-- Add the following content
+- Add the following content.
 ```ini
 [Unit]
 Description=Uptime Kuma
@@ -191,39 +191,39 @@ Environment=PORT=3001
 WantedBy=multi-user.target
 ```
 
-- Reload the systemd daemon and start the Uptime Kuma service
+- Reload the systemd daemon and start the Uptime Kuma service.
 ```bash
 sudo systemctl daemon-reload
 sudo systemctl enable uptime-kuma.service
 sudo systemctl start uptime-kuma.service
 ```
 
-- Check the status of the Uptime Kuma service
+- Check the status of the Uptime Kuma service.
 ```bash
 sudo systemctl status uptime-kuma.service
 ```
 
-- Check the logs of the Uptime Kuma service
+- Check the logs of the Uptime Kuma service.
 ```bash
 journalctl -u uptime-kuma.service
 ```
 
-- Go to the Uptime Kuma dashboard `http://localhost:3001`
+- Go to the Uptime Kuma dashboard `http://localhost:3001`.
 
-- Stop the Uptime Kuma service
+- Stop the Uptime Kuma service.
 ```bash
 sudo systemctl stop uptime-kuma.service
 # sudo systemctl restart uptime-kuma.service
 ```
 
-- Disable the Uptime Kuma service
+- Disable the Uptime Kuma service.
 ```bash
 sudo systemctl disable uptime-kuma.service
 ```
 
 ### 👉Step 7: Small modifications to source code
 
-- Open the file in the `uptime-kuma` directory
+- Open the file in the `uptime-kuma` directory.
 ```bash
 sudo nano /uptime-kuma/src/router.js
 ```
@@ -244,7 +244,7 @@ sudo nano /uptime-kuma/src/router.js
 },
 ```
 
-- Open the file in the `uptime-kuma` directory
+- Open the file in the `uptime-kuma` directory.
 ```bash
 sudo nano /uptime-kuma/server/server.js
 ```
@@ -255,7 +255,7 @@ response.redirect("/dashboard");
 response.redirect("/status/main");
 ```
 
-- Save the file and restart the Uptime Kuma service
+- Save the file and restart the Uptime Kuma service.
 ```bash
 sudo systemctl restart uptime-kuma.service
 ```

@@ -57,6 +57,8 @@ network:
         - to: default
           via: 10.134.188.1 # e.g. 10.0.0.254/24
 ```
+
+- Apply the network configuration.
 ```bash
 sudo chmod 600 /etc/netplan/01-netcfg.yaml
 sudo netplan apply
