@@ -46,6 +46,7 @@ network:
   ethernets:
     ens18:
       dhcp4: no
+      dhcp6: no
       accept-ra: no
       addresses:
         - 192.168.1.170/24 # e.g. 192.168.1.171, 192.168.1.172, 192.168.1.173, ...
@@ -67,7 +68,7 @@ sudo netplan apply
 
 - Disable IPv6 on the servers & enable IP forwarding.
 ```bash
-echo -e "net.ipv4.ip_forward = 1" | sudo tee /etc/sysctl.conf | sudo sysctl -p
+echo -e "net.ipv6.conf.all.disable_ipv6 = 1\nnet.ipv6.conf.default.disable_ipv6 = 1\nnet.ipv6.conf.lo.disable_ipv6 = 1net.ipv4.ip_forward = 1" | sudo tee /etc/sysctl.conf | sudo sysctl -p
 ```
 
 - Add the hostnames to the `/etc/hosts` file.
