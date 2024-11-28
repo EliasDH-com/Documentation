@@ -14,7 +14,7 @@
 
 ## 🖖Introduction
 
-This document describes the steps to create a Kubernetes cluster with nodes. The OS is Ubuntu 24.04 LTS.
+This document describes the steps to create a Kubernetes cluster with nodes. The OS is Ubuntu 22.04 LTS.
 
 ## ✨Steps
 
@@ -32,7 +32,7 @@ sudo timedatectl set-timezone Europe/Brussels
 
 - Set the hostname of the servers.
 ```bash
-sudo hostnamectl set-hostname nodexx # e.g. node00, node01, ...
+sudo hostnamectl set-hostname node01 # e.g. node01, node02, node03, ...
 ```
 
 - Configure the network interfaces of the servers.
@@ -46,27 +46,33 @@ network:
   ethernets:
     ens18:
       dhcp4: no
-      dhcp6: no
       accept-ra: no
       addresses:
-        - 10.134.188.20/27 # e.g. 10.0.0.1/24
+        - 192.168.1.170/24 # e.g. 192.168.1.171, 192.168.1.172, 192.168.1.173, ...
       nameservers:
         addresses:
-          - 10.194.17.2 # e.g. 10.0.0.253/24
+          - 192.168.1.120
+          - 8.8.8.8
       routes:
         - to: default
-          via: 10.134.188.1 # e.g. 10.0.0.254/24
+          via: 192.168.1.1
 ```
 
 - Apply the network configuration.
 ```bash
 sudo chmod 600 /etc/netplan/01-netcfg.yaml
+sudo chown root:root /etc/netplan/01-netcfg.yaml
 sudo netplan apply
 ```
 
-- Disable IPv6 on the servers.
+- Disable IPv6 on the servers & enable IP forwarding.
 ```bash
-echo -e "net.ipv6.conf.all.disable_ipv6 = 1\nnet.ipv6.conf.default.disable_ipv6 = 1\nnet.ipv6.conf.lo.disable_ipv6 = 1" | sudo tee /etc/sysctl.conf > /dev/null && sudo sysctl -p
+echo -e "net.ipv4.ip_forward = 1" | sudo tee /etc/sysctl.conf | sudo sysctl -p
+```
+
+- Add the hostnames to the `/etc/hosts` file.
+```bash
+echo -e "127.0.0.1 localhost\n192.168.1.171 node01\n192.168.1.172 node02\n192.168.1.173 node03\n192.168.1.174 node04\n192.168.1.175 node05\n192.168.1.176 node06\n192.168.1.177 node07\n192.168.1.178 node08\n192.168.1.179 node09" | sudo tee /etc/hosts > /dev/null
 ```
 
 - Add the following lines to `/etc/motd` to display a welcome message when logging in.
@@ -119,6 +125,12 @@ sudo nano /etc/motd
 ------------------------------
 ```
 
+- Clean up the servers.
+```bash
+sudo apt-get autoremove -y && sudo apt-get autoclean -y
+history -c
+```
+
 - Reboot the servers.
 ```bash
 sudo reboot
@@ -126,12 +138,81 @@ sudo reboot
 
 ### 👉Step 2: Install and Configure Kubernetes
 
-- Install prerequisites on all the nodes.
+- Disable swap on the node.
 ```bash
+sudo swapoff -a
+sudo nano /etc/fstab # Comment out the swap line
+```
+
+- Install a container runtime (Docker).
+```bash
+sudo apt install -y apt-transport-https ca-certificates curl software-properties-common
+sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+sudo apt update
+sudo apt install -y containerd.io
+```
+
+- Configure containerd.
+```bash
+sudo mkdir -p /etc/containerd
+sudo su
+containerd config default > /etc/containerd/config.toml
+systemctl restart containerd
+exit
+```
+
+- Install Kubernetes.
+```bash
+curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.31/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.31/deb/ /' | sudo tee /etc/apt/sources.list.d/kubernetes.list
+sudo apt update
+```
+
+- Install Kubernetes tools.
+```bash
+sudo apt install -y kubelet kubeadm kubectl
+sudo apt-mark hold kubelet kubeadm kubectl
+sudo kubeadm init phase kubelet-start
+sudo systemctl start kubelet # (Optional)
+sudo systemctl status kubelet # (Optional)
 
 ```
 
-> ***TODO***
+- Initialize the Kubernetes cluster on the master node: **node01**
+```bash
+sudo kubeadm init --pod-network-cidr=10.0.0.0/8 --apiserver-advertise-address=192.168.1.171
+# Copy the kubeadm join command e.g. kubeadm join 192.168.1.171:6443 --token <token> --discovery-token-ca-cert-hash sha256:<hash>
+```
+
+- Configure the Kubernetes cluster: **node01**
+```bash
+mkdir -p $HOME/.kube
+sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+sudo chown $(id -u):$(id -g) $HOME/.kube/config
+```
+
+- Install a pod network add-on (Calico): **node01**
+```bash
+kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/v3.29.1/manifests/tigera-operator.yaml
+curl https://raw.githubusercontent.com/projectcalico/calico/v3.29.1/manifests/custom-resources.yaml -O
+kubectl create -f custom-resources.yaml
+watch kubectl get pods -n calico-system
+
+
+kubectl get pods -n kube-system  # Check if all pods are running
+sudo systemctl restart kubelet
+sudo systemctl status kubelet
+```
+
+
+
+
+kubeadm join 192.168.1.171:6443 --token 26v2l6.0jhei689wqt6ml07 \
+        --discovery-token-ca-cert-hash sha256:2369a41d701396592f281ffb1b00f924a149eb2615f647e7dcdfb1e06f52d669
+kubectl get nodes
+
+
 
 ## 🔗Links
 - 👯 Web hosting company [EliasDH.com](https://eliasdh.com).
