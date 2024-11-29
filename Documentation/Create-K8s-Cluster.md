@@ -7,83 +7,38 @@
 2. [🖖Introduction](#🖖introduction)
 3. [✨Steps](#✨steps)
     1. [👉Step 1: Set up basic configuration](#👉step-1-set-up-basic-configuration)
-    2. [👉Step 2: Install and Configure Kubernetes](#👉step-2-install-and-configure-kubernetes)
-    3. [👉Step 3: Initialize the Kubernetes cluster](#👉step-3-initialize-the-kubernetes-cluster)
+    2. [👉Step 2: Install and Configure Docker](#👉step-2-install-and-configure-docker)
+    3. [👉Step 3: Install and Configure Kubernetes](#👉step-3-install-and-configure-kubernetes)
+    4. [👉Step 4: Initialize the Kubernetes cluster](#👉step-4-initialize-the-kubernetes-cluster)
+    5. [👉Step x: Troubleshoot commands](#👉step-x-troubleshoot-commands)
 4. [🔗Links](#🔗links)
 
 ---
 
 ## 🖖Introduction
 
-This document describes the steps to create a Kubernetes cluster with nodes. The OS is Ubuntu 22.04 LTS.
+This document describes the steps to create a Kubernetes cluster with nodes. The OS is Ubuntu 24.04 LTS.
 
 ## ✨Steps
 
-### 👉Step 1: Set up basic configuration
+### 👉Step 1: Set up the operating system
 
-- Install the necessary software packages
+- Install the necessary software packages. **For all servers.**
 ```bash
 sudo apt-get update -y && sudo apt-get upgrade -y
 ```
 
-- Set time zone to `Europe/Brussels` on both servers.
+- Set time zone to `Europe/Brussels` on both servers. **For all servers.**
 ```bash
 sudo timedatectl set-timezone Europe/Brussels
 ```
 
-- Set the hostname of the servers.
+- Set the hostname of the servers. **For all servers.**
 ```bash
 sudo hostnamectl set-hostname node00 # e.g. node01, node02, node03, ...
 ```
 
-- Disable cloud-init on the servers.
-```bash
-echo "network: {config: disabled}" | sudo tee /etc/cloud/cloud.cfg.d/99-disable-network-config.cfg
-sudo touch /etc/cloud/cloud-init.disabled
-```
-
-- Configure the network interfaces of the servers.
-```bash
-sudo rm -rf /etc/netplan/50-cloud-init.yaml
-sudo nano /etc/netplan/01-netcfg.yaml
-```
-```yaml
-network:
-  version: 2
-  ethernets:
-    ens18:
-      dhcp4: no
-      dhcp6: no
-      accept-ra: no
-      addresses:
-        - 192.168.1.170/24 # e.g. 192.168.1.171, 192.168.1.172, 192.168.1.173, ...
-      nameservers:
-        addresses:
-          - 192.168.1.120
-          - 8.8.8.8
-      routes:
-        - to: default
-          via: 192.168.1.1
-```
-
-- Apply the network configuration.
-```bash
-sudo chmod 600 /etc/netplan/01-netcfg.yaml
-sudo chown root:root /etc/netplan/01-netcfg.yaml
-sudo netplan apply
-```
-
-- Disable IPv6 on the servers & enable IP forwarding.
-```bash
-echo -e "net.ipv6.conf.all.disable_ipv6 = 1\nnet.ipv6.conf.default.disable_ipv6 = 1\nnet.ipv6.conf.lo.disable_ipv6 = 1\nnet.ipv4.ip_forward = 1" | sudo tee /etc/sysctl.conf | sudo sysctl -p
-```
-
-- Add the hostnames to the `/etc/hosts` file.
-```bash
-echo -e "127.0.0.1 localhost\n192.168.1.171 node01\n192.168.1.172 node02\n192.168.1.173 node03\n192.168.1.174 node04\n192.168.1.175 node05\n192.168.1.176 node06\n192.168.1.177 node07\n192.168.1.178 node08\n192.168.1.179 node09" | sudo tee /etc/hosts > /dev/null
-```
-
-- Add the following lines to `/etc/motd` to display a welcome message when logging in.
+- Add the following lines to `/etc/motd` to display a welcome message when logging in. **For all servers.**
 ```bash
 sudo nano /etc/motd
 ```
@@ -129,77 +84,198 @@ sudo nano /etc/motd
 ??????????????????????????????????????????JJJJJJJJJJJJJJJJJ?????????????????????????????????????????
 ????????????????????????????????????????????????????????????????????????????????????????????????????
 ------------------------------
-- Welcome to server [node01] -
+- Welcome to server [node00] -
 ------------------------------
 ```
 
-- Clean up the servers.
+- Disable cloud-init on the servers. **For all servers.**
 ```bash
-sudo apt-get autoremove -y && sudo apt-get autoclean -y
-history -c
+echo "network: {config: disabled}" | sudo tee /etc/cloud/cloud.cfg.d/99-disable-network-config.cfg
+sudo touch /etc/cloud/cloud-init.disabled
 ```
 
-- Reboot the servers.
+- Configure the network interfaces of the servers. **For all servers.**
+```bash
+sudo rm -rf /etc/netplan/50-cloud-init.yaml
+sudo nano /etc/netplan/01-netcfg.yaml
+```
+```yaml
+network:
+  version: 2
+  ethernets:
+    ens18:
+      dhcp4: no
+      dhcp6: no
+      accept-ra: no
+      addresses:
+        - 192.168.1.170/24 # e.g. 192.168.1.171, 192.168.1.172, 192.168.1.173, ...
+      nameservers:
+        addresses:
+          - 192.168.1.120
+          - 8.8.8.8
+      routes:
+        - to: default
+          via: 192.168.1.1
+```
+
+- Disable IPv6 on the servers. **For all servers.**
+```bash
+echo -e "net.ipv6.conf.all.disable_ipv6 = 1\nnet.ipv6.conf.default.disable_ipv6 = 1\nnet.ipv6.conf.lo.disable_ipv6 = 1" | sudo tee /etc/sysctl.conf | sudo sysctl -p
+```
+
+- Add the hostnames to the `/etc/hosts` file. **For all servers.**
+```bash
+echo -e "127.0.0.1 localhost\n192.168.1.171 node01\n192.168.1.172 node02\n192.168.1.173 node03\n192.168.1.174 node04\n192.168.1.175 node05\n192.168.1.176 node06\n192.168.1.177 node07\n192.168.1.178 node08\n192.168.1.179 node09" | sudo tee /etc/hosts > /dev/null
+```
+
+- Apply the network configuration. **For all servers.**
+```bash
+sudo chmod 600 /etc/netplan/01-netcfg.yaml
+sudo chown root:root /etc/netplan/01-netcfg.yaml
+sudo netplan apply
+```
+
+- Reboot the servers. **For all servers.**
 ```bash
 sudo reboot
 ```
 
-### 👉Step 2: Install and Configure Kubernetes
+### 👉Step 2: Install and Configure Docker
 
-- Disable swap on the node.
+- Install dependencies. **For all servers.**
 ```bash
-sudo swapoff -a
-sudo nano /etc/fstab # Comment out the swap line
+sudo apt-get install -y apt-transport-https gnupg ca-certificates curl software-properties-common
+```	
+
+- Check for missing packages. **For all servers.**
+```bash
+for pkg in docker.io docker-doc docker-compose docker-compose-v2 podman-docker containerd runc; do sudo apt-get remove $pkg; done
+```	
+
+- Add Docker's official GPG key. **For all servers.**
+```bash
+sudo apt-get update
+sudo apt-get install ca-certificates curl
+sudo install -m 0755 -d /etc/apt/keyrings
+sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+sudo chmod a+r /etc/apt/keyrings/docker.asc
 ```
 
-- Install a container runtime (Docker).
+- Add the repository to Apt sources. **For all servers.**
 ```bash
-sudo apt install -y apt-transport-https ca-certificates curl software-properties-common
-sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
-echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
-sudo apt update
-sudo apt install -y containerd.io
+echo \
+  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
+  $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
+  sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+sudo apt-get update
 ```
 
-- Configure containerd.
+- Install Docker. **For all servers.**
 ```bash
-sudo mkdir -p /etc/containerd
-sudo su
-containerd config default > /etc/containerd/config.toml
-systemctl restart containerd
+sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+```
+
+- Add user to the Docker group. **For all servers.**
+```bash
+sudo usermod -aG docker $USER
 exit
 ```
 
-- Install Kubernetes.
+- Verify the installation. **For all servers.**
+```bash
+docker --version
+```
+
+### 👉Step 3: Install and Configure Kubernetes
+
+- Disable swap on the node. **For all servers.**
+```bash
+sudo swapoff -a
+sudo sed -i 's|/swap.img|#/swap.img|g' /etc/fstab
+```
+
+- Load the necessary kernel modules. **For all servers.**
+```bash
+sudo modprobe overlay
+sudo modprobe br_netfilter
+echo -e "overlay\nbr_netfilter" | sudo tee /etc/modules-load.d/k8s.conf
+```
+
+- Enable IP forwarding on the node. **For all servers.**
+```bash
+echo -e "net.ipv4.ip_forward = 1" | sudo tee /etc/sysctl.d/k8s.conf
+sudo sysctl --system
+```
+
+- Configure the container runtime. **For all servers.**
+```bash
+sudo containerd config default | sudo tee /etc/containerd/config.toml > /dev/null
+sudo sed -i 's|SystemdCgroup = false|SystemdCgroup = true|g' /etc/containerd/config.toml
+sudo systemctl restart containerd
+```
+
+- Install Kubernetes. **For all servers.**
 ```bash
 curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.31/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
 echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.31/deb/ /' | sudo tee /etc/apt/sources.list.d/kubernetes.list
-sudo apt update
+sudo apt-get update
 ```
 
-- Install Kubernetes tools.
+- Install Kubernetes tools. **For all servers.**
 ```bash
-sudo apt install -y kubelet kubeadm kubectl kubernetes-cni
-sudo apt-mark hold kubelet kubeadm kubectl kubernetes-cni
-sudo systemctl start kubelet
-sudo systemctl status kubelet # (Optional)
+sudo apt install -y kubelet kubeadm kubectl
+sudo apt-mark hold kubelet kubeadm kubectl
 ```
 
-- Create a containerd group and add the user to the group. **Necessary for older versions.**
+- Reboot the servers. **For all servers.**
 ```bash
-getent group containerd
-sudo groupadd containerd
-sudo usermod -aG containerd $USER
+sudo shutdown -h now
 ```
 
-- Configure crictl. **Necessary for older versions.**
+> **Note:** Assuming you did this in a virtual machine, you can convert it to a template and then, create a few instances. e.g. node01, node02, node03, ...
+
+| Name   | Roll        | IP            |
+|--------|-------------|---------------|
+| node01 | Master      | 192.168.1.171 |
+| node02 | Master      | 192.168.1.172 |
+| node03 | Master      | 192.168.1.173 |
+| node04 | Worker      | 192.168.1.174 |
+| node05 | Worker      | 192.168.1.175 |
+| node06 | Worker      | 192.168.1.176 |
+| node07 | Worker      | 192.168.1.177 |
+| node08 | Worker      | 192.168.1.178 |
+| node09 | Worker      | 192.168.1.179 |
+
+> **3 Master nodes**.
+
+> **6 Worker nodes**.
+
+### 👉Step 4: Initialize the Kubernetes cluster
+
+
+TODO: https://www.youtube.com/watch?v=vX2n05t0AQg
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+- Setup firewall rules
 ```bash
-echo "runtime-endpoint: unix:///run/containerd/containerd.sock" | sudo tee ~/.crictl.yaml > /dev/null
-sudo systemctl restart containerd
-sudo crictl ps
+sudo ufw allow 6443/tcp
+sudo ufw allow 22/tcp
+sudo ufw enable
 ```
-
-### 👉Step 3: Initialize the Kubernetes cluster
 
 - Initialize the Kubernetes cluster on the master node: **node01**
 ```bash
@@ -216,7 +292,8 @@ sudo kubeadm join 192.168.1.171:6443 --token <token> --discovery-token-ca-cert-h
 ```bash
 mkdir -p $HOME/.kube
 sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
-sudo chown $(id -u):$(id -g) $HOME/.kube/config
+sudo chown $(id -u):$(id -g) $HOME/.kube/
+export KUBECONFIG=$HOME/.kube/config
 ```
 
 - Install a pod network add-on (Calico): **node01**
@@ -227,6 +304,14 @@ kubectl apply -f https://docs.projectcalico.org/manifests/calico.yaml
 - Check the status of the nodes: **node01**
 ```bash
 kubectl get nodes
+```
+
+### 👉Step x: Troubleshoot commands
+
+```bash
+crictl ps | grep kube-apiserver
+sudo systemctl status containerd # sudo systemctl restart containerd
+sudo systemctl status kubelet # sudo systemctl restart kubelet
 ```
 
 ## 🔗Links
