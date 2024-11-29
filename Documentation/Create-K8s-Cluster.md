@@ -36,9 +36,15 @@ sudo timedatectl set-timezone Europe/Brussels
 sudo hostnamectl set-hostname node00 # e.g. node01, node02, node03, ...
 ```
 
+- Disable cloud-init on the servers.
+```bash
+echo "network: {config: disabled}" | sudo tee /etc/cloud/cloud.cfg.d/99-disable-network-config.cfg
+sudo touch /etc/cloud/cloud-init.disabled
+```
+
 - Configure the network interfaces of the servers.
 ```bash
-sudo rm /etc/netplan/50-cloud-init.yaml
+sudo rm -rf /etc/netplan/50-cloud-init.yaml
 sudo nano /etc/netplan/01-netcfg.yaml
 ```
 ```yaml
@@ -69,7 +75,7 @@ sudo netplan apply
 
 - Disable IPv6 on the servers & enable IP forwarding.
 ```bash
-echo -e "net.ipv6.conf.all.disable_ipv6 = 1\nnet.ipv6.conf.default.disable_ipv6 = 1\nnet.ipv6.conf.lo.disable_ipv6 = 1net.ipv4.ip_forward = 1" | sudo tee /etc/sysctl.conf | sudo sysctl -p
+echo -e "net.ipv6.conf.all.disable_ipv6 = 1\nnet.ipv6.conf.default.disable_ipv6 = 1\nnet.ipv6.conf.lo.disable_ipv6 = 1\nnet.ipv4.ip_forward = 1" | sudo tee /etc/sysctl.conf | sudo sysctl -p
 ```
 
 - Add the hostnames to the `/etc/hosts` file.
@@ -173,19 +179,37 @@ sudo apt update
 
 - Install Kubernetes tools.
 ```bash
-sudo apt install -y kubelet kubeadm kubectl
-sudo apt-mark hold kubelet kubeadm kubectl
+sudo apt install -y kubelet kubeadm kubectl kubernetes-cni
+sudo apt-mark hold kubelet kubeadm kubectl kubernetes-cni
 sudo systemctl start kubelet
-sudo kubeadm init phase kubelet-start
 sudo systemctl status kubelet # (Optional)
+```
+
+- Create a containerd group and add the user to the group. **Necessary for older versions.**
+```bash
+getent group containerd
+sudo groupadd containerd
+sudo usermod -aG containerd $USER
+```
+
+- Configure crictl. **Necessary for older versions.**
+```bash
+echo "runtime-endpoint: unix:///run/containerd/containerd.sock" | sudo tee ~/.crictl.yaml > /dev/null
+sudo systemctl restart containerd
+sudo crictl ps
 ```
 
 ### 👉Step 3: Initialize the Kubernetes cluster
 
 - Initialize the Kubernetes cluster on the master node: **node01**
 ```bash
-sudo kubeadm init --pod-network-cidr=10.0.0.0/8 --apiserver-advertise-address=192.168.1.171
-# Copy the kubeadm join command e.g. kubeadm join 192.168.1.171:6443 --token <token> --discovery-token-ca-cert-hash sha256:<hash>
+sudo kubeadm init
+# Copy the kubeadm join command
+```
+
+- join the worker nodes to the cluster: **node02, node03, ...**
+```bash
+sudo kubeadm join 192.168.1.171:6443 --token <token> --discovery-token-ca-cert-hash sha256:<hash>
 ```
 
 - Configure the Kubernetes cluster: **node01**
@@ -197,25 +221,13 @@ sudo chown $(id -u):$(id -g) $HOME/.kube/config
 
 - Install a pod network add-on (Calico): **node01**
 ```bash
-kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/v3.29.1/manifests/tigera-operator.yaml
-curl https://raw.githubusercontent.com/projectcalico/calico/v3.29.1/manifests/custom-resources.yaml -O
-kubectl create -f custom-resources.yaml
-watch kubectl get pods -n calico-system
-
-
-kubectl get pods -n kube-system  # Check if all pods are running
-sudo systemctl restart kubelet
-sudo systemctl status kubelet
+kubectl apply -f https://docs.projectcalico.org/manifests/calico.yaml
 ```
 
-
-
-
-kubeadm join 192.168.1.171:6443 --token 26v2l6.0jhei689wqt6ml07 \
-        --discovery-token-ca-cert-hash sha256:2369a41d701396592f281ffb1b00f924a149eb2615f647e7dcdfb1e06f52d669
+- Check the status of the nodes: **node01**
+```bash
 kubectl get nodes
-
-
+```
 
 ## 🔗Links
 - 👯 Web hosting company [EliasDH.com](https://eliasdh.com).
