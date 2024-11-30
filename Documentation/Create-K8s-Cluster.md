@@ -9,8 +9,8 @@
     1. [👉Step 1: Set up basic configuration](#👉step-1-set-up-basic-configuration)
     2. [👉Step 2: Install and Configure Docker](#👉step-2-install-and-configure-docker)
     3. [👉Step 3: Install and Configure Kubernetes](#👉step-3-install-and-configure-kubernetes)
-    4. [👉Step 4: Initialize the Kubernetes cluster](#👉step-4-initialize-the-kubernetes-cluster)
-    5. [👉Step x: Troubleshoot commands](#👉step-x-troubleshoot-commands)
+    4. [👉Step 4: Set up reverse/forward proxy](#👉step-4-set-up-reverseforward-proxy)
+    5. [👉Step 5: Initialize the Kubernetes cluster](#👉step-5-initialize-the-kubernetes-cluster)
 4. [🔗Links](#🔗links)
 
 ---
@@ -23,22 +23,22 @@ This document describes the steps to create a Kubernetes cluster with nodes. The
 
 ### 👉Step 1: Set up the operating system
 
-- Install the necessary software packages. **For all servers.**
+- Install the necessary software packages. **For all nodes & proxy**
 ```bash
 sudo apt-get update -y && sudo apt-get upgrade -y
 ```
 
-- Set time zone to `Europe/Brussels` on both servers. **For all servers.**
+- Set time zone to `Europe/Brussels` on both servers. **For all nodes & proxy**
 ```bash
 sudo timedatectl set-timezone Europe/Brussels
 ```
 
-- Set the hostname of the servers. **For all servers.**
+- Set the hostname of the servers. **For all nodes & proxy**
 ```bash
 sudo hostnamectl set-hostname node00 # e.g. node01, node02, node03, ...
 ```
 
-- Add the following lines to `/etc/motd` to display a welcome message when logging in. **For all servers.**
+- Add the following lines to `/etc/motd` to display a welcome message when logging in. **For all nodes & proxy**
 ```bash
 sudo nano /etc/motd
 ```
@@ -88,13 +88,13 @@ sudo nano /etc/motd
 ------------------------------
 ```
 
-- Disable cloud-init on the servers. **For all servers.**
+- Disable cloud-init on the servers. **For all nodes & proxy**
 ```bash
 echo "network: {config: disabled}" | sudo tee /etc/cloud/cloud.cfg.d/99-disable-network-config.cfg
 sudo touch /etc/cloud/cloud-init.disabled
 ```
 
-- Configure the network interfaces of the servers. **For all servers.**
+- Configure the network interfaces of the servers. **For all nodes & proxy**
 ```bash
 sudo rm -rf /etc/netplan/50-cloud-init.yaml
 sudo nano /etc/netplan/01-netcfg.yaml
@@ -118,41 +118,41 @@ network:
           via: 192.168.1.1
 ```
 
-- Disable IPv6 on the servers. **For all servers.**
+- Disable IPv6 on the servers. **For all nodes & proxy**
 ```bash
 echo -e "net.ipv6.conf.all.disable_ipv6 = 1\nnet.ipv6.conf.default.disable_ipv6 = 1\nnet.ipv6.conf.lo.disable_ipv6 = 1" | sudo tee /etc/sysctl.conf | sudo sysctl -p
 ```
 
-- Add the hostnames to the `/etc/hosts` file. **For all servers.**
+- Add the hostnames to the `/etc/hosts` file. **For all nodes & proxy**
 ```bash
-echo -e "127.0.0.1 localhost\n192.168.1.171 node01\n192.168.1.172 node02\n192.168.1.173 node03\n192.168.1.174 node04\n192.168.1.175 node05\n192.168.1.176 node06\n192.168.1.177 node07\n192.168.1.178 node08\n192.168.1.179 node09" | sudo tee /etc/hosts > /dev/null
+echo -e "127.0.0.1 localhost\n192.168.1.170 proxy1\n192.168.1.171 node01\n192.168.1.172 node02\n192.168.1.173 node03\n192.168.1.174 node04\n192.168.1.175 node05\n192.168.1.176 node06\n192.168.1.177 node07\n192.168.1.178 node08\n192.168.1.179 node09" | sudo tee /etc/hosts > /dev/null
 ```
 
-- Apply the network configuration. **For all servers.**
+- Apply the network configuration. **For all nodes & proxy**
 ```bash
 sudo chmod 600 /etc/netplan/01-netcfg.yaml
 sudo chown root:root /etc/netplan/01-netcfg.yaml
 sudo netplan apply
 ```
 
-- Reboot the servers. **For all servers.**
+- Reboot the servers. **For all nodes & proxy**
 ```bash
 sudo reboot
 ```
 
 ### 👉Step 2: Install and Configure Docker
 
-- Install dependencies. **For all servers.**
+- Install dependencies. **For all nodes**
 ```bash
 sudo apt-get install -y apt-transport-https gnupg ca-certificates curl software-properties-common
 ```	
 
-- Check for missing packages. **For all servers.**
+- Check for missing packages. **For all nodes**
 ```bash
 for pkg in docker.io docker-doc docker-compose docker-compose-v2 podman-docker containerd runc; do sudo apt-get remove $pkg; done
 ```	
 
-- Add Docker's official GPG key. **For all servers.**
+- Add Docker's official GPG key. **For all nodes**
 ```bash
 sudo apt-get update
 sudo apt-get install ca-certificates curl
@@ -161,7 +161,7 @@ sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyring
 sudo chmod a+r /etc/apt/keyrings/docker.asc
 ```
 
-- Add the repository to Apt sources. **For all servers.**
+- Add the repository to Apt sources. **For all nodes**
 ```bash
 echo \
   "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
@@ -170,121 +170,194 @@ echo \
 sudo apt-get update
 ```
 
-- Install Docker. **For all servers.**
+- Install Docker. **For all nodes**
 ```bash
 sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 ```
 
-- Add user to the Docker group. **For all servers.**
+- Add user to the Docker group. **For all nodes**
 ```bash
 sudo usermod -aG docker $USER
 exit
 ```
 
-- Verify the installation. **For all servers.**
+- Verify the installation. **For all nodes**
 ```bash
 docker --version
 ```
 
 ### 👉Step 3: Install and Configure Kubernetes
 
-- Disable swap on the node. **For all servers.**
+- Disable swap on the node. **For all nodes**
 ```bash
 sudo swapoff -a
 sudo sed -i 's|/swap.img|#/swap.img|g' /etc/fstab
 ```
 
-- Load the necessary kernel modules. **For all servers.**
+- Load the necessary kernel modules. **For all nodes**
 ```bash
 sudo modprobe overlay
 sudo modprobe br_netfilter
 echo -e "overlay\nbr_netfilter" | sudo tee /etc/modules-load.d/k8s.conf
 ```
 
-- Enable IP forwarding on the node. **For all servers.**
+- Enable IP forwarding on the node. **For all nodes**
 ```bash
 echo -e "net.ipv4.ip_forward = 1" | sudo tee /etc/sysctl.d/k8s.conf
 sudo sysctl --system
 ```
 
-- Configure the container runtime. **For all servers.**
+- Configure the container runtime. **For all nodes**
 ```bash
 sudo containerd config default | sudo tee /etc/containerd/config.toml > /dev/null
 sudo sed -i 's|SystemdCgroup = false|SystemdCgroup = true|g' /etc/containerd/config.toml
 sudo systemctl restart containerd
 ```
 
-- Install Kubernetes. **For all servers.**
+- Install Kubernetes. **For all nodes**
 ```bash
 curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.31/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
 echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.31/deb/ /' | sudo tee /etc/apt/sources.list.d/kubernetes.list
 sudo apt-get update
 ```
 
-- Install Kubernetes tools. **For all servers.**
+- Install Kubernetes tools. **For all nodes**
 ```bash
 sudo apt install -y kubelet kubeadm kubectl
 sudo apt-mark hold kubelet kubeadm kubectl
 ```
 
-- Reboot the servers. **For all servers.**
+- Reboot the servers. **For all nodes**
 ```bash
 sudo shutdown -h now
 ```
 
 > **Note:** Assuming you did this in a virtual machine, you can convert it to a template and then, create a few instances. e.g. node01, node02, node03, ...
 
-| ID  | Name   | Roll        | IP            | CPU | RAM | OS               |
-|-----|--------|-------------|---------------| --- | --- | -----------------|
-| 171 | node01 | Master      | 192.168.1.171 | 1   | 2GB | Ubuntu 24.04 LTS |
-| 172 | node02 | Master      | 192.168.1.172 | 1   | 2GB | Ubuntu 24.04 LTS |
-| 173 | node03 | Master      | 192.168.1.173 | 1   | 2GB | Ubuntu 24.04 LTS |
-| 174 | node04 | Worker      | 192.168.1.174 | 2   | 4GB | Ubuntu 24.04 LTS |
-| 175 | node05 | Worker      | 192.168.1.175 | 2   | 4GB | Ubuntu 24.04 LTS |
-| 176 | node06 | Worker      | 192.168.1.176 | 2   | 4GB | Ubuntu 24.04 LTS |
-| 177 | node07 | Worker      | 192.168.1.177 | 2   | 4GB | Ubuntu 24.04 LTS |
-| 178 | node08 | Worker      | 192.168.1.178 | 2   | 4GB | Ubuntu 24.04 LTS |
-| 179 | node09 | Worker      | 192.168.1.179 | 2   | 4GB | Ubuntu 24.04 LTS |
+| ID  | Name   | Roll        | IP            | CPU | RAM   | Disk | OS               | Type |
+|-----|--------|-------------|---------------| --- | ----- | ---- | -----------------| ---- |
+| 170 | proxy1 | Proxy       | 192.168.1.170 | 1   | 0.5GB | 8GB  | Ubuntu 24.04 LTS | CT   |
+| 171 | node01 | Master      | 192.168.1.171 | 2   | 2GB   | 32GB | Ubuntu 24.04 LTS | VM   |
+| 172 | node02 | Master      | 192.168.1.172 | 2   | 2GB   | 32GB | Ubuntu 24.04 LTS | VM   |
+| 173 | node03 | Master      | 192.168.1.173 | 2   | 2GB   | 32GB | Ubuntu 24.04 LTS | VM   |
+| 174 | node04 | Worker      | 192.168.1.174 | 2   | 4GB   | 32GB | Ubuntu 24.04 LTS | VM   |
+| 175 | node05 | Worker      | 192.168.1.175 | 2   | 4GB   | 32GB | Ubuntu 24.04 LTS | VM   |
+| 176 | node06 | Worker      | 192.168.1.176 | 2   | 4GB   | 32GB | Ubuntu 24.04 LTS | VM   |
+| 177 | node07 | Worker      | 192.168.1.177 | 2   | 4GB   | 32GB | Ubuntu 24.04 LTS | VM   |
+| 178 | node08 | Worker      | 192.168.1.178 | 2   | 4GB   | 32GB | Ubuntu 24.04 LTS | VM   |
+| 179 | node09 | Worker      | 192.168.1.179 | 2   | 4GB   | 32GB | Ubuntu 24.04 LTS | VM   |
 
-### 👉Step 4: Initialize the Kubernetes cluster
+### 👉Step 4: Set up reverse/forward proxy
 
-
-TODO: https://www.youtube.com/watch?v=vX2n05t0AQg
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-- Setup firewall rules
+- Create a new user on the proxy server. **proxy1**
 ```bash
-sudo ufw allow 6443/tcp
-sudo ufw allow 22/tcp
-sudo ufw enable
+sudo useradd -m -s /bin/bash -G sudo elias
+sudo passwd elias
 ```
 
-- Initialize the Kubernetes cluster on the master node: **node01**
+- Install Nginx on the proxy server. **proxy1**
+```bash
+sudo apt-get install -y nginx
+```
+
+- Generate an SSL certificate. **proxy1**
+```bash
+sudo apt-get install -y openssl
+sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/ssl/private/private.key -out /etc/ssl/certs/certificate.crt -subj "/C=BE/ST=Brussels/L=Brussels/O=EliasDH/OU=IT/CN=eliasdh.com"
+```
+
+- Configure Nginx as a reverse proxy. **proxy1**
+```bash
+sudo rm -rf /etc/nginx/sites-available/default
+sudo nano /etc/nginx/nginx.conf
+```
+```nginx
+user www-data;
+worker_processes auto;
+pid /run/nginx.pid;
+error_log /var/log/nginx/error.log;
+include /etc/nginx/modules-enabled/*.conf;
+
+http {
+    upstream master_nodes {
+        server 192.168.1.171:6443;                                              # Master nodes01
+        server 192.168.1.172:6443;                                              # Master nodes02
+        server 192.168.1.173:6443;                                              # Master nodes03
+    }
+
+    server {
+        listen 6443 ssl;
+
+        ssl_certificate /etc/ssl/certs/certificate.crt;                        # SSL certificate
+        ssl_certificate_key /etc/ssl/private/private.key;                      # SSL private key
+
+        location / {
+            proxy_pass https://master_nodes;                                    # Forward traffic to the master nodes
+            proxy_next_upstream error timeout http_502 http_503 http_504;       # Handle errors
+            proxy_set_header Host $host;                                        # Forward the host header
+            proxy_set_header X-Real-IP $remote_addr;                            # Forward the real IP
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;        # Forward the forwarded IP
+            proxy_set_header X-Forwarded-Proto $scheme;                         # Forward the protocol
+            proxy_ssl_verify off;                                               # Disable SSL verification
+        }
+    }
+}
+
+events {
+    worker_connections 768;
+}
+```
+
+- Restart Nginx. **proxy1**
+```bash
+sudo systemctl restart nginx
+```
+
+- Test the reverse proxy. **proxy1**
+```bash
+curl -k https://192.168.1.170:6443
+```
+
+### 👉Step 5: Initialize the Kubernetes cluster
+
+- Initialize the Kubernetes cluster on the master node. **node01**
+```bash
+sudo kubeadm init --pod-network-cidr "10.244.0.0/16" --control-plane-endpoint "192.168.1.170:6443" --upload-certs --v=5
+# sudo kubeadm reset
+# Copy the kubeadm join command
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+- Initialize the Kubernetes cluster on the master node. **node01**
 ```bash
 sudo kubeadm init
 # Copy the kubeadm join command
 ```
 
-- join the worker nodes to the cluster: **node02, node03, ...**
+- join the worker nodes to the cluster. **node02, node03, ...**
 ```bash
 sudo kubeadm join 192.168.1.171:6443 --token <token> --discovery-token-ca-cert-hash sha256:<hash>
 ```
 
-- Configure the Kubernetes cluster: **node01**
+- Configure the Kubernetes cluster. **node01**
 ```bash
 mkdir -p $HOME/.kube
 sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
@@ -292,22 +365,14 @@ sudo chown $(id -u):$(id -g) $HOME/.kube/
 export KUBECONFIG=$HOME/.kube/config
 ```
 
-- Install a pod network add-on (Calico): **node01**
+- Install a pod network add-on (Calico). **node01**
 ```bash
 kubectl apply -f https://docs.projectcalico.org/manifests/calico.yaml
 ```
 
-- Check the status of the nodes: **node01**
+- Check the status of the nodes. **node01**
 ```bash
 kubectl get nodes
-```
-
-### 👉Step x: Troubleshoot commands
-
-```bash
-crictl ps | grep kube-apiserver
-sudo systemctl status containerd # sudo systemctl restart containerd
-sudo systemctl status kubelet # sudo systemctl restart kubelet
 ```
 
 ## 🔗Links
