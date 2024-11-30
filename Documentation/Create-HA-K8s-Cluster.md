@@ -1,5 +1,5 @@
 ![logo](https://eliasdh.com/assets/media/images/logo-github.png)
-# 💙🤍Create K8s Cluster🤍💙
+# 💙🤍Create HA K8s Cluster🤍💙
 
 ## 📘Table of Contents
 
@@ -11,13 +11,16 @@
     3. [👉Step 3: Install and Configure Kubernetes](#👉step-3-install-and-configure-kubernetes)
     4. [👉Step 4: Set up reverse/forward proxy](#👉step-4-set-up-reverseforward-proxy)
     5. [👉Step 5: Initialize the Kubernetes cluster](#👉step-5-initialize-the-kubernetes-cluster)
-4. [🔗Links](#🔗links)
+4. [📝Notes](#📝notes)
+5. [🔗Links](#🔗links)
 
 ---
 
 ## 🖖Introduction
 
 This document describes the steps to create a Kubernetes cluster with nodes. The OS is Ubuntu 24.04 LTS.
+- [Youtube Video](https://www.youtube.com/watch?v=vX2n05t0AQg)
+- [Github Repository - A must read](https://github.com/kubernetes/kubeadm/blob/main/docs/ha-considerations.md#options-for-software-load-balancing)
 
 ## ✨Steps
 
@@ -255,124 +258,234 @@ sudo useradd -m -s /bin/bash -G sudo elias
 sudo passwd elias
 ```
 
-- Install Nginx on the proxy server. **proxy1**
+- Install [keepalived](https://www.keepalived.org/) and [haproxy](https://www.haproxy.org/) on the proxy server. **proxy1**
 ```bash
-sudo apt-get install -y nginx
+sudo apt-get install -y keepalived haproxy
 ```
 
-- Generate an SSL certificate. **proxy1**
+- Configure the keepalived service. **proxy1**
 ```bash
-sudo apt-get install -y openssl
-sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/ssl/private/private.key -out /etc/ssl/certs/certificate.crt -subj "/C=BE/ST=Brussels/L=Brussels/O=EliasDH/OU=IT/CN=eliasdh.com"
+sudo rm -rf /etc/keepalived/keepalived.conf
+sudo nano /etc/keepalived/keepalived.conf
 ```
-
-- Configure Nginx as a reverse proxy. **proxy1**
-```bash
-sudo rm -rf /etc/nginx/sites-available/default
-sudo nano /etc/nginx/nginx.conf
-```
-```nginx
-user www-data;
-worker_processes auto;
-pid /run/nginx.pid;
-error_log /var/log/nginx/error.log;
-include /etc/nginx/modules-enabled/*.conf;
-
-http {
-    upstream master_nodes {
-        server 192.168.1.171:6443;                                              # Master nodes01
-        server 192.168.1.172:6443;                                              # Master nodes02
-        server 192.168.1.173:6443;                                              # Master nodes03
-    }
-
-    server {
-        listen 6443 ssl;
-
-        ssl_certificate /etc/ssl/certs/certificate.crt;                        # SSL certificate
-        ssl_certificate_key /etc/ssl/private/private.key;                      # SSL private key
-
-        location / {
-            proxy_pass https://master_nodes;                                    # Forward traffic to the master nodes
-            proxy_next_upstream error timeout http_502 http_503 http_504;       # Handle errors
-            proxy_set_header Host $host;                                        # Forward the host header
-            proxy_set_header X-Real-IP $remote_addr;                            # Forward the real IP
-            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;        # Forward the forwarded IP
-            proxy_set_header X-Forwarded-Proto $scheme;                         # Forward the protocol
-            proxy_ssl_verify off;                                               # Disable SSL verification
-        }
-    }
+```conf
+global_defs {
+    router_id proxy1
+    script_user root
+    script_security 1
 }
 
-events {
-    worker_connections 768;
+vrrp_script check_apiserver {
+    script "/etc/keepalived/check_apiserver.sh"
+    interval 3
+    weight -2
+    fall 10
+    rise 2
+}
+
+vrrp_instance VI_1 {
+    state MASTER
+    interface eth0
+    virtual_router_id 51
+    priority 101
+    advert_int 1
+    authentication {
+        auth_type PASS
+        auth_pass 1111
+    }
+    virtual_ipaddress {
+        192.168.1.170
+    }
+    track_script {
+        check_apiserver
+    }
 }
 ```
 
-- Restart Nginx. **proxy1**
+- Create the script to check the API server. **proxy1**
 ```bash
-sudo systemctl restart nginx
+sudo nano /etc/keepalived/check_apiserver.sh
+```
+```bash
+#!/bin/sh
+
+errorExit() {
+    echo "*** $*" 1>&2
+    exit 1
+}
+
+curl -sfk --max-time 2 https://192.168.1.171:6443/healthz -o /dev/null || errorExit "Error GET https://192.168.1.171:6443/healthz"
+curl -sfk --max-time 2 https://192.168.1.172:6443/healthz -o /dev/null || errorExit "Error GET https://192.168.1.172:6443/healthz"
+curl -sfk --max-time 2 https://192.168.1.173:6443/healthz -o /dev/null || errorExit "Error GET https://192.168.1.173:6443/healthz"
+```
+
+- Make the script executable. **proxy1**
+```bash
+sudo chmod +x /etc/keepalived/check_apiserver.sh
+```
+
+- Configure the haproxy service. **proxy1**
+```bash
+sudo rm -rf /etc/haproxy/haproxy.cfg
+sudo nano /etc/haproxy/haproxy.cfg
+```
+```conf
+global
+    log stdout format raw local0
+    daemon
+
+defaults
+    mode                    http
+    log                     global
+    option                  httplog
+    option                  dontlognull
+    option http-server-close
+    option forwardfor       except 127.0.0.0/8
+    option                  redispatch
+    retries                 1
+    timeout http-request    10s
+    timeout queue           20s
+    timeout connect         5s
+    timeout client          35s
+    timeout server          35s
+    timeout http-keep-alive 10s
+    timeout check           10s
+
+frontend apiserver
+    bind *:6443
+    mode tcp
+    option tcplog
+    default_backend apiserverbackend
+
+backend apiserverbackend
+    option httpchk
+
+    http-check connect ssl
+    http-check send meth GET uri /healthz
+    http-check expect status 200
+
+    mode tcp
+    balance     roundrobin
+    
+    server node01 192.168.1.171:6443 check verify none
+    server node02 192.168.1.172:6443 check verify none
+    server node03 192.168.1.173:6443 check verify none
+```
+
+- Restart the keepalived and haproxy services. **proxy1**
+```bash
+sudo systemctl restart keepalived haproxy
+```
+
+- Check the status of the keepalived and haproxy services. **proxy1**
+```bash
+sudo systemctl status keepalived haproxy
 ```
 
 - Test the reverse proxy. **proxy1**
 ```bash
-curl -k https://192.168.1.170:6443
+nc -v 192.168.1.170 6443
 ```
 
 ### 👉Step 5: Initialize the Kubernetes cluster
 
 - Initialize the Kubernetes cluster on the master node. **node01**
 ```bash
-sudo kubeadm init --pod-network-cidr "10.244.0.0/16" --control-plane-endpoint "192.168.1.170:6443" --upload-certs --v=5
-# sudo kubeadm reset
-# Copy the kubeadm join command
+sudo kubeadm init \
+--cri-socket "/run/containerd/containerd.sock" \
+--pod-network-cidr "10.244.0.0/16" \
+--control-plane-endpoint "192.168.1.170:6443" \
+--upload-certs \
+--v "5"
+# Copy the kubeadm join commands for the worker nodes and the master node
 ```
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-- Initialize the Kubernetes cluster on the master node. **node01**
-```bash
-sudo kubeadm init
-# Copy the kubeadm join command
-```
-
-- join the worker nodes to the cluster. **node02, node03, ...**
-```bash
-sudo kubeadm join 192.168.1.171:6443 --token <token> --discovery-token-ca-cert-hash sha256:<hash>
-```
-
-- Configure the Kubernetes cluster. **node01**
+- Configure the Kubernetes cluster (optional). **node01, node02, node03**
 ```bash
 mkdir -p $HOME/.kube
 sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
 sudo chown $(id -u):$(id -g) $HOME/.kube/
-export KUBECONFIG=$HOME/.kube/config
 ```
 
-- Install a pod network add-on (Calico). **node01**
+- Join the `master` node to the cluster. **node01, node02, node03**
 ```bash
-kubectl apply -f https://docs.projectcalico.org/manifests/calico.yaml
+sudo kubeadm join 192.168.1.170:6443 --token <token> \
+        --discovery-token-ca-cert-hash sha256:<hash> \
+        --control-plane --certificate-key <key>
 ```
 
-- Check the status of the nodes. **node01**
+- Join the `worker` nodes to the cluster. **node04, node05, node06, node07, node08, node09**
 ```bash
-kubectl get nodes
+sudo kubeadm join 192.168.1.170:6443 --token <token> \
+        --discovery-token-ca-cert-hash sha256:<hash>
+```
+
+- Install helm. **node01, node02, node03**
+```bash
+curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3
+chmod 700 get_helm.sh
+sudo ./get_helm.sh
+```
+
+- Install the Cilium CNI plugin. **node01**
+```bash
+helm repo add cilium https://helm.cilium.io/
+CILIUM_CLI_VERSION=$(curl -s https://raw.githubusercontent.com/cilium/cilium-cli/main/stable.txt)
+CLI_ARCH=amd64
+if [ "$(uname -m)" = "aarch64" ]; then CLI_ARCH=arm64; fi
+curl -L --fail --remote-name-all https://github.com/cilium/cilium-cli/releases/download/${CILIUM_CLI_VERSION}/cilium-linux-${CLI_ARCH}.tar.gz{,.sha256sum}
+sha256sum --check cilium-linux-${CLI_ARCH}.tar.gz.sha256sum
+sudo tar xzvfC cilium-linux-${CLI_ARCH}.tar.gz /usr/local/bin
+rm cilium-linux-${CLI_ARCH}.tar.gz{,.sha256sum}
+helm install cilium cilium/cilium --version 1.16.1 \
+  --namespace kube-system \
+  --set hubble.relay.enabled=true \
+  --set hubble.ui.enabled=true \
+  --set prometheus.enabled=true \
+  --set operator.prometheus.enabled=true \
+  --set hubble.enabled=true \
+  --set hubble.metrics.enavleOpenMetrics=true \
+  --set hubble.metrics.enabled="{dns,drop,tcp,flow,port-distribution,icmp,httpv2:exemplars=true;labelsContext=source_ip\,source_namespace\,source_workload\,destination_ip\,destination_namespace\,destination_workload\, traffic_direction}"
+```
+
+> **Note:** CNI is a plugin that allows Kubernetes to communicate with the network. Cilium is a CNI plugin that provides networking, security, and observability features.
+
+> CNI = Container Network Interface
+
+- Now wait for all the pots to be `running`. **node01**
+```bash
+watch kubectl get pods -n kube-system # Press Ctrl+C to exit
+```
+
+## 📝Notes
+
+- Interesting commands:
+```bash
+sudo crictl --runtime-endpoint unix:///run/containerd/containerd.sock ps -a # List all containers
+
+sudo crictl --runtime-endpoint unix:///run/containerd/containerd.sock logs 494942b3f2efb # Get the logs of a container
+
+sudo kubeadm init --cri-socket "/run/containerd/containerd.sock" --pod-network-cidr "10.244.0.0/16" --upload-certs --v=5 # Initialize the cluster without high availability no ip of the reverse proxy for the control plane endpoint 
+
+sudo ufw disable # Disable the firewall
+sudo ufw enable # Enable the firewall
+sudo ufw allow 22/tcp # Allow SSH
+
+sudo kubeadm reset # Reset the cluster
+
+kubectl get nodes -o wide # List all nodes with additional information
+
+
+sudo cat /etc/kubernetes/manifests/kube-apiserver.yaml # Check the API server configuration
+
+sudo tail -f /var/log/nginx/access.log # Check the Nginx access log
+sudo tail -f /var/log/nginx/error.log # Check the Nginx error log
+
+sudo apt-get remove -y nginx nginx-common nginx-core # Remove Nginx
+sudo apt-get purge -y nginx nginx-common nginx-core # Purge Nginx
+sudo apt-get autoremove -y # Remove unused packages
+
+sudo rm -rf $HOME/.kube/config # Remove the Kubernetes configuration
 ```
 
 ## 🔗Links
