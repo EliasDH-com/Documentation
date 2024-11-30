@@ -459,7 +459,7 @@ watch kubectl get pods -n kube-system # Press Ctrl+C to exit
 
 - Check the status of the nodes. **node01**
 ```bash
-kubectl get nodes -o wide
+watch kubectl get nodes -o wide # Press Ctrl+C to exit
 ```
 
 ***Congratulations, you have your high availability cluster up and running!***
