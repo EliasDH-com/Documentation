@@ -234,21 +234,17 @@ sudo shutdown -h now
 
 > **Note:** Assuming you did this in a virtual machine, you can convert it to a template and then, create a few instances. e.g. node01, node02, node03, ...
 
-| Name   | Roll        | IP            |
-|--------|-------------|---------------|
-| node01 | Master      | 192.168.1.171 |
-| node02 | Master      | 192.168.1.172 |
-| node03 | Master      | 192.168.1.173 |
-| node04 | Worker      | 192.168.1.174 |
-| node05 | Worker      | 192.168.1.175 |
-| node06 | Worker      | 192.168.1.176 |
-| node07 | Worker      | 192.168.1.177 |
-| node08 | Worker      | 192.168.1.178 |
-| node09 | Worker      | 192.168.1.179 |
-
-> **3 Master nodes**.
-
-> **6 Worker nodes**.
+| ID  | Name   | Roll        | IP            | CPU | RAM | OS               |
+|-----|--------|-------------|---------------| --- | --- | -----------------|
+| 171 | node01 | Master      | 192.168.1.171 | 1   | 2GB | Ubuntu 24.04 LTS |
+| 172 | node02 | Master      | 192.168.1.172 | 1   | 2GB | Ubuntu 24.04 LTS |
+| 173 | node03 | Master      | 192.168.1.173 | 1   | 2GB | Ubuntu 24.04 LTS |
+| 174 | node04 | Worker      | 192.168.1.174 | 2   | 4GB | Ubuntu 24.04 LTS |
+| 175 | node05 | Worker      | 192.168.1.175 | 2   | 4GB | Ubuntu 24.04 LTS |
+| 176 | node06 | Worker      | 192.168.1.176 | 2   | 4GB | Ubuntu 24.04 LTS |
+| 177 | node07 | Worker      | 192.168.1.177 | 2   | 4GB | Ubuntu 24.04 LTS |
+| 178 | node08 | Worker      | 192.168.1.178 | 2   | 4GB | Ubuntu 24.04 LTS |
+| 179 | node09 | Worker      | 192.168.1.179 | 2   | 4GB | Ubuntu 24.04 LTS |
 
 ### 👉Step 4: Initialize the Kubernetes cluster
 
