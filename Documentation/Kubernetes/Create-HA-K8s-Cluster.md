@@ -389,15 +389,21 @@ nc -v 192.168.1.170 6443
 
 ### 👉Step 5: Initialize the Kubernetes cluster
 
+```yaml
+# cluster01-config.yaml
+apiVersion: kubeadm.k8s.io/v1beta3
+kind: ClusterConfiguration
+metadata:
+  name: cluster01
+controlPlaneEndpoint: "192.168.1.170:6443"
+networking:
+  podSubnet: "10.244.0.0/16"
+criSocket: "/run/containerd/containerd.sock"
+```
+
 - Initialize the Kubernetes cluster on the master node. **node01**
 ```bash
-sudo kubeadm init \
---cri-socket "/run/containerd/containerd.sock" \
---pod-network-cidr "10.244.0.0/16" \
---control-plane-endpoint "192.168.1.170:6443" \
---cluster-name "cluster01" \
---upload-certs \
---v "5"
+sudo kubeadm init --config cluster01-config.yaml --upload-certs --v "5"
 # Copy the kubeadm join commands for the worker nodes and the master node
 ```
 
@@ -473,7 +479,7 @@ sudo crictl --runtime-endpoint unix:///run/containerd/containerd.sock ps -a # Li
 
 sudo crictl --runtime-endpoint unix:///run/containerd/containerd.sock logs 494942b3f2efb # Get the logs of a container
 
-sudo kubeadm init --cri-socket "/run/containerd/containerd.sock" --pod-network-cidr "10.244.0.0/16" --upload-certs --v=5 # Initialize the cluster without high availability no ip of the reverse proxy for the control plane endpoint 
+sudo kubeadm init --cri-socket "/run/containerd/containerd.sock" --pod-network-cidr "10.244.0.0/16" --cluster-name "cluster01" --upload-certs --v=5 # Initialize the cluster without high availability no ip of the reverse proxy for the control plane endpoint 
 
 sudo ufw disable # Disable the firewall
 sudo ufw enable # Enable the firewall
