@@ -395,6 +395,7 @@ sudo kubeadm init \
 --cri-socket "/run/containerd/containerd.sock" \
 --pod-network-cidr "10.244.0.0/16" \
 --control-plane-endpoint "192.168.1.170:6443" \
+--cluster-name "cluster01" \
 --upload-certs \
 --v "5"
 # Copy the kubeadm join commands for the worker nodes and the master node
@@ -479,7 +480,7 @@ sudo ufw disable # Disable the firewall
 sudo ufw enable # Enable the firewall
 sudo ufw allow 22/tcp # Allow SSH
 
-sudo kubeadm reset # Reset the cluster
+sudo kubeadm reset # Reset the cluster (remove the nodes from the cluster)
 
 kubectl get nodes -o wide # List all nodes with additional information
 
