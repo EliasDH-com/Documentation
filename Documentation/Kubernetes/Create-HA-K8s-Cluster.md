@@ -465,7 +465,6 @@ watch kubectl get nodes -o wide # Press Ctrl+C to exit
 
 ***Congratulations, you have your high availability cluster up and running!***
 
-
 ## 📝Notes
 
 - Interesting commands:
