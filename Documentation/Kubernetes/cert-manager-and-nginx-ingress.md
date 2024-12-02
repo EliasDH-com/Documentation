@@ -87,20 +87,11 @@ metadata:
 spec:
   ipAddressPools:
   - address-pool-1
-  nodeSelectors:
-  - matchLabels:
-      kubernetes.io/hostname: node01
-  - matchLabels:
-      kubernetes.io/hostname: node02
-  - matchLabels:
-      kubernetes.io/hostname: node03
-  interfaces:
-  - ens18
 ```
 
 - Check if the L2 Advertisement is set:
 ```bash
-kubectl get L2Advertisement -n metallb-system
+kubectl get l2advertisement -n metallb-system
 ```
 
 ## 👉 Deploy Nginx Ingress For Cloud
