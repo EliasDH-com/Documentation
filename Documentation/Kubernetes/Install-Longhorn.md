@@ -60,6 +60,7 @@ dpkg -l | grep nfs-common                           # Check if the nfs-common pa
 - Install Longhorn.
 ```bash
 kubectl apply -f https://raw.githubusercontent.com/longhorn/longhorn/v1.7.2/deploy/longhorn.yaml
+# kubectl delete -f https://raw.githubusercontent.com/longhorn/longhorn/v1.7.2/deploy/longhorn.yaml
 ```
 
 - Check the status of the pods.
