@@ -16,8 +16,6 @@
 
 This is a simple guide to deploy cert-manager and nginx ingress on your kubernetes cluster. This guide is for both cloud and bare metal clusters.
 
-
-
 ## 👉 Deploy Cert Manager For Bare Metal And Cloud
 
 - This one is easy:
