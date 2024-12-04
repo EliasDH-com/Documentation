@@ -7,10 +7,9 @@
 2. [🖖Introduction](#🖖introduction)
 3. [✨Posts](#✨posts)
     1. [👉Post 1: Template Proxmox "notes"](#👉post-1-template-proxmox-notes)
-    2. [👉Post 2: Proxmox node web GUI theme modificaties](#👉post-2-proxmox-node-web-gui-theme-modificaties)
-    3. [👉Post 3: Remove node and cluster Proxmox](#👉post-3-remove-node-and-cluster-proxmox)
-    4. [👉Post 4: Remove (local-lvm) Proxmox](#👉post-4-remove-local-lvm-proxmox)
-    5. [👉Post 5: Remove Enterprise Repository](#👉post-5-remove-enterprise-repository)
+    2. [👉Post 3: Remove node and cluster Proxmox](#👉post-3-remove-node-and-cluster-proxmox)
+    3. [👉Post 4: Remove (local-lvm) Proxmox](#👉post-4-remove-local-lvm-proxmox)
+    4. [👉Post 5: Remove Enterprise Repository](#👉post-5-remove-enterprise-repository)
 4. [🔗Links](#🔗links)
 
 ---
@@ -40,18 +39,7 @@ Port = E-/ I-/
 -
 ```
 
-### 👉Post 2: Proxmox node web GUI theme modificaties
-> This is a collection of modifications that I have made to the Proxmox web GUI theme. I have made these modifications to make the web GUI more to my liking.
-```bash
-apt update && apt install wget curl -y
-bash <(curl -s https://raw.githubusercontent.com/EliasDH-com/PVECustomTheme/master/PVECustomTheme.sh ) install
-bash <(curl -s https://raw.githubusercontent.com/EliasDH-com/PVECustomTheme/master/PVECustomTheme.sh ) uninstall
-
-# bash <(curl -s https://raw.githubusercontent.com/Weilbyte/PVEDiscordDark/master/PVEDiscordDark.sh ) uninstall
-# bash <(curl -s https://raw.githubusercontent.com/Weilbyte/PVEDiscordDark/master/PVEDiscordDark.sh ) install
-```
-
-### 👉Post 3: Remove node and cluster Proxmox
+### 👉Post 2: Remove node and cluster Proxmox
 - Remove node
     ```bash
     sudo pvecm nodes
@@ -82,7 +70,7 @@ bash <(curl -s https://raw.githubusercontent.com/EliasDH-com/PVECustomTheme/mast
     sudo reboot
     ```
 
-### 👉Post 4: Remove (local-lvm) Proxmox
+### 👉Post 3: Remove (local-lvm) Proxmox
 
 ```bash
 sudo lvremve /dev/pve/data
@@ -94,7 +82,7 @@ sudo resize2fs /dev/mapper/pve-root
 
 Credit: [Youtube Programming Stuff](https://www.youtube.com/watch?v=rMe3pd2sBf4)
 
-### 👉Post 5: Remove Enterprise Repository
+### 👉Post 4: Remove Enterprise Repository
 
 ```bash
 nano /etc/apt/sources.list
