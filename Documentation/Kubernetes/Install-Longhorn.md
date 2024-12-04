@@ -7,7 +7,8 @@
 2. [🖖Introduction](#🖖introduction)
 3. [✨Steps](#✨steps)
     1. [👉Step 1: Set up environment](#👉step-1-set-up-environment)
-
+    2. [👉Step 2: Install Longhorn](#👉step-2-install-longhorn)
+    3. [👉Step 3: Access the Longhorn UI](#👉step-3-access-the-longhorn-ui)
 4. [🔗Links](#🔗links)
 
 ---
