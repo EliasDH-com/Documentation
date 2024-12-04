@@ -87,6 +87,7 @@ USER=<USERNAME_HERE>; PASSWORD=<PASSWORD_HERE>; echo "${USER}:$(openssl passwd -
 - Create a secret.
 ```bash
 kubectl create secret generic basic-auth -n longhorn-system --from-file=auth
+rm auth
 # kubectl delete secret basic-auth -n longhorn-system
 ```
 
