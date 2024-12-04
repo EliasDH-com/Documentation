@@ -15,17 +15,18 @@
 
 ## 🖖Introduction
 
+This guide will help you install Longhorn on a Kubernetes cluster. Longhorn is a distributed block storage system for Kubernetes. It is built using containers and microservices. Longhorn creates a dedicated storage controller for each block device volume and synchronously replicates the volume across multiple replicas stored on multiple nodes. The storage controller and replicas are themselves orchestrated using Kubernetes. Longhorn is lightweight, reliable, and easy to use.
 
 ## ✨Steps
 
 ### 👉Step 1: Set up environment
 
-- Update and upgrade the system
+- Update and upgrade the system.
 ```bash
 sudo apt-get update && sudo apt-get upgrade -y
 ```
 
-- Test if the system is ready for Longhorn
+- Test if the system is ready for Longhorn.
 ```bash
 bash <(curl -s https://raw.githubusercontent.com/longhorn/longhorn/refs/tags/v1.7.2/scripts/environment_check.sh)
 ```
@@ -56,35 +57,40 @@ dpkg -l | grep nfs-common                           # Check if the nfs-common pa
 
 ### 👉Step 2: Install Longhorn
 
-- Install Longhorn
+- Install Longhorn.
 ```bash
 kubectl apply -f https://raw.githubusercontent.com/longhorn/longhorn/v1.7.2/deploy/longhorn.yaml
 ```
 
-- Check the status of the pods
+- Check the status of the pods.
 ```bash
 kubectl get pods --namespace longhorn-system --watch
 ```
 
-- Check the status of the Longhorn system
+- Check the status of the Longhorn system.
 ```bash
 kubectl -n longhorn-system get pods
 ```
 
+- Get the storage class.
+```bash
+kubectl get storageclass
+```
+
 ### 👉Step 3: Access the Longhorn UI
 
-- Create a basic authentication file
+- Create a basic authentication file.
 ```bash
 USER=<USERNAME_HERE>; PASSWORD=<PASSWORD_HERE>; echo "${USER}:$(openssl passwd -stdin -apr1 <<< ${PASSWORD})" >> auth
 ```
 
-- Create a secret
+- Create a secret.
 ```bash
 kubectl create secret generic basic-auth -n longhorn-system --from-file=auth
 # kubectl delete secret basic-auth -n longhorn-system
 ```
 
-- Set up a ingress controller
+- Set up a ingress controller.
 ```bash
 kubectl apply -f Ingress.yaml
 # Service name: longhorn-frontend
@@ -92,12 +98,12 @@ kubectl apply -f Ingress.yaml
 # Port: 8080
 ```
 
-- Access the Longhorn UI
+- Access the Longhorn UI.
 ```bash
 kubectl get ingress -A
 ```
 
-- Test the Longhorn UI
+- Test the Longhorn UI.
 ```bash
 curl http://<EXTERNAL_IP> # <EXTERNAL_IP> is the IP address of the ingress controller
 ```
