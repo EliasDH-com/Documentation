@@ -459,6 +459,27 @@ helm install cilium cilium/cilium --version 1.16.1 \
 
 > CNI = Container Network Interface
 
+- Check the peering port. **node01**
+```bash
+kubectl get endpoints hubble-peer -n kube-system | grep -E "4244" # Check the peering port
+```
+
+> If the peering port is `443`, you need to change it to `4244`.
+
+- Set the container `hubble-relay-config` to peering port `4244` in instead of `443`. **node01**
+```bash
+kubectl get configmap hubble-relay-config -n kube-system -o yaml | sed 's/:443/:4244/' | kubectl apply -f - # Update the configmap
+kubectl delete pod -n kube-system -l app.kubernetes.io/name=hubble-relay # Restart the pod
+```
+
+- Enable the Hubble UI outside the cluster. **node01**
+```bash
+kubectl delete svc hubble-ui -n kube-system
+kubectl get pods -n kube-system | grep hubble
+kubectl expose pod hubble-ui-77555d5dcf-mttb4 -n kube-system --type=LoadBalancer --name=hubble-ui --port=80 --target-port=8081
+kubectl get svc hubble-ui -n kube-system
+```
+
 - Now wait for all the pots to be `running`. **node01**
 ```bash
 watch kubectl get pods -n kube-system # Press Ctrl+C to exit
